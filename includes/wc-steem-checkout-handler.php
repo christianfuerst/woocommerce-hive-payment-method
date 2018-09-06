@@ -2,7 +2,7 @@
 /**
  * WC_Steem_Checkout_Handler
  *
- * @package WooCommerce Steem
+ * @package WooCommerce Steem Payment Method
  * @category Class Handler
  * @author ReCrypto
  */
@@ -19,7 +19,6 @@ class WC_Steem_Checkout_Handler {
 	}
 
 	public static function enqueue_scripts() {
-
 		// Plugin
 		wp_enqueue_script('wc-steem', WC_STEEM_DIR_URL . '/assets/js/plugin.js', array('jquery'), WC_STEEM_VERSION);
 
@@ -34,3 +33,4 @@ class WC_Steem_Checkout_Handler {
 }
 
 WC_Steem_Checkout_Handler::init();
+

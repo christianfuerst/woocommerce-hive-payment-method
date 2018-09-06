@@ -2,7 +2,7 @@
 /**
  * WC_Steem_Order_Handler
  *
- * @package WooCommerce Steem
+ * @package WooCommerce Steem Payment Method
  * @category Class Handler
  * @author ReCrypto
  */

@@ -2,7 +2,7 @@
 /**
  * WC_Gateway_Steem
  *
- * @package WooCommerce Steem
+ * @package WooCommerce Steem Payment Method
  * @category Class
  * @author ReCrypto
  */
@@ -264,9 +264,17 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 			WC_Steem::reset();
 		}
 
+		$payee = get_post_meta($order_id, '_wc_steem_payee', true);
+		$amount = get_post_meta($order_id, '_wc_steem_amount', true);
+		$currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
+		$memo = get_post_meta($order_id, '_wc_steem_memo', true);
+
+		$steemConnectUrl = "https://v2.steemconnect.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
+		
 		$response = array(
 			'result' => 'success',
-			'redirect' => $this->get_return_url($order)
+			'redirect' => $steemConnectUrl
+			// 'redirect' => $this->get_return_url($order)			
 		);
 
 		return $response;
