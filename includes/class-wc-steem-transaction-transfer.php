@@ -2,7 +2,7 @@
 /**
  * WC_Steem_Transaction_Transfer
  *
- * @package WooCommerce Steem
+ * @package WooCommerce Steem Payment Method
  * @category Class
  * @author ReCrypto
  */
@@ -44,27 +44,43 @@ class WC_Steem_Transaction_Transfer {
 			return $transfer;
 		}
 
-		$response = wp_remote_get(
-			add_query_arg(
-				array(
-					'to' => $data['to'],
-					'memo' => $data['memo'],
-					'amount' => $data['amount'],
-					'amount_symbol' => $data['amount_currency'],
-					'limit' => 1,
-				),
-				'http://steemful.com/api/v1/transactions/transfers'
-			)
-		);
+		// $response = wp_remote_get(
+			// add_query_arg(
+				// array(
+					// 'to' => $data['to'],
+					// 'memo' => $data['memo'],
+					// 'amount' => $data['amount'],
+					// 'amount_symbol' => $data['amount_currency'],
+					// 'limit' => 1,
+				// ),
+				// 'http://steemful.com/api/v1/transactions/transfers'
+			// )
+		// );
 
-		if (is_array($response)) {
-			$response_body = json_decode(wp_remote_retrieve_body($response), true);
+		// if (is_array($response)) {
+			// $response_body = json_decode(wp_remote_retrieve_body($response), true);
 
-			if (isset($response_body['data'][0]) && $response_body['data'][0]) {
-				$transfer = $response_body['data'][0];
+			// if (isset($response_body['data'][0]) && $response_body['data'][0]) {
+				// $transfer = $response_body['data'][0];
+			// }
+		// }
+		
+		$tx = json_decode(file_get_contents("https://steakovercooked.com/api/steemit/transfer-history/?id=" . $data['to']), true);
+		foreach ($tx as $r) {
+			$transaction_messsage = "Received " . $data['amount'] . " " . $data['amount_currency'] . " from ";
+			
+			if ($data['memo'] === $r['memo'] &&
+				substr($r['transaction'], 0, strlen($transaction_messsage)) === $transaction_messsage
+				) {
+				$transfer = $r;
+				break;
 			}
+		  // echo $r['time'];
+		  // echo $r['time_desc'];
+		  // echo $r['memo'];
+		  // echo $r['transaction'];
 		}
-
+		
 		return $transfer;
 	}
 }

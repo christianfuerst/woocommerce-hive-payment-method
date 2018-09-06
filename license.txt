@@ -1,6 +1,6 @@
-WooCommerce Steem - Payment Method for WooCommerce
+﻿WooCommerce Steem Payment Method - Payment Method for WooCommerce
 
-Copyright 2015 by the contributors
+Copyright 2018 by the contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,6 +31,15 @@ and
   WooCommerce Steem is Copyright (c) 2015 ReCrypto
 
   WooCommerce Steem is released under the GPL
+
+and
+
+  WooCommerce Steem Payment Method - Payment Method for WooCommerce
+
+  WooCommerce Steem Payment Method is Copyright (c) 2018 sagescrub
+
+  WooCommerce Steem Payment Method is released under the GPL
+
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
