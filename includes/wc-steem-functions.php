@@ -2,7 +2,7 @@
 /**
  * WooCommerce Steem Helpers
  *
- * @package WooCommerce Steem Payment Method
+ * @package WooCommerce Steem
  * @category Helper
  * @author ReCrypto
  */
@@ -93,7 +93,7 @@ function wc_steem_get_base_fiat_currency() {
 	$fiat_currency = wc_steem_get_currency_symbol();
 
 	if ( ! in_array($fiat_currency, wc_steem_get_accepted_fiat_currencies())) {
-		$fiat_currency = apply_filters('wc_steem_base_default_fiat_currency', 'USD');
+		// $fiat_currency = apply_filters('wc_steem_base_default_fiat_currency', 'USD');
 	}
 
 	return apply_filters('wc_steem_base_fiat_currency', $fiat_currency);
@@ -107,7 +107,7 @@ function wc_steem_get_base_fiat_currency() {
  */
 function wc_steem_get_accepted_fiat_currencies() {
 	return apply_filters('wc_steem_accepted_fiat_currencies', array(
-		'AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'GBP', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'ZAR', 'EUR'
+		'AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'GBP', 'HKD', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'ZAR', 'EUR',
 	));
 }
 

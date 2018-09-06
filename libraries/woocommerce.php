@@ -2,7 +2,7 @@
 /**
  * WooCommerce Helpers
  *
- * @package WooCommerce Steem Payment Method
+ * @package WooCommerce Steem
  * @category Library
  * @author ReCrypto
  */

@@ -2,7 +2,7 @@
 /**
  * WC_Steem
  *
- * @package WooCommerce Steem Payment Method
+ * @package WooCommerce Steem
  * @category Class
  * @author ReCrypto
  */
@@ -12,20 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 class WC_Steem {
-
-	public static function init() {
-		$instance = __CLASS__;
-
-		add_action('woocommerce_set_cart_cookies', array($instance, 'wc_set_cart_cookies'), 30);		
-	}
-	
-	public static function wc_set_cart_cookies($set) {
-		// If the session variables have not ben set yet for this cart
-		if (self::get('amount_currency') == null) {
-			// Initialize WC_Steem variables for the new cart.
-			WC_Steem::reset();
-		}
-	}	
 
 	# Setters
 
@@ -104,5 +90,3 @@ class WC_Steem {
 		self::set('amount_currency', 'STEEM');
 	}
 }
-
-WC_Steem::init();
