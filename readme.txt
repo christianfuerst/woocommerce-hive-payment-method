@@ -3,13 +3,13 @@ Contributors: sagescrub, recrypto
 Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd
 Requires at least: 4.1
-Tested up to: 4.7.5
+Tested up to: 4.9.8
 Stable tag: 1.0.6
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-WooCommerce Steem Payment Method lets you accept Steem payments directly to your WooCommerce shop (Currencies: STEEM, SBD).
+Accept STEEM or SBD payments in your WooCommerce store via SteemConnect. Automatically converts from fiat (USD, EUR, etc) to STEEM. No transaction fees.
 
 == Description ==
 
@@ -27,9 +27,9 @@ WooCommerce Steem Payment Method lets you accept Steem payments directly to your
 - Steem (STEEM)
 - Steem Backed Dollars (SBD)
 
-= Currency Limitation =
-- Currently supports different fiat currencies such as: AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, GBP, HKD, HRK, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, TRY, ZAR, EUR
-- If none of the fiat currency listed above, it will default 1:1 conversion rate.
+= FIAT Currencies Supported =
+- Currently supports fiat currencies such as: AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, GBP, HKD, HRK, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, TRY, ZAR, EUR
+- If none of the fiat currency listed above, it will default 1:1 conversion rate between your store's currency and STEEM or SBD.
 
 = Security Note =
 You will <strong>NOT</strong> require any Steem keys for this plugin to work. You just have to provide your Steem username and you're good to go.
@@ -77,22 +77,10 @@ Steem: @sagescrub
 
 == Changelog ==
 
-= 1.0.2 - 2017-06-03 =
-* Initial version in WordPress Plugin Repository
-
-= 1.0.3 - 2017-06-11 =
-* Fixed Steem Transaction Transfer data in WooCommerce Order notes in admin
-* Fixed date format issue in WooCommerce Order page
-
-= 1.0.4 - 2017-06-16 =
-* Added an insightful prices on product templates that shows the accepted currencies such as SBD and/or STEEM rates converted from the product price
-
-= 1.0.5 - 2017-07-26 =
-* Fixed return context when a function call is supplied	
-
 = 1.0.6 - 2018-09-05 =
 * New version in WordPress Plugin Repository named "WooCommerce Steem Payment Method" (forked from WooCommerce Steem)
 * Added auto payment reminder email
 * Added SteemConnect into payment flow
 * Updated the auto payment matching feature to use a different API since previous API (SteemSQL) is no longer freely available
 * Fixed Null reference error that would not show exchange rate for order total when the checkout page first loads.
+

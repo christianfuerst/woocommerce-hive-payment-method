@@ -1,7 +1,7 @@
 ![WooCommerce Steem](https://steemitimages.com/0x0/https://ps.w.org/woo-steem/assets/banner-1544x500.png?rev=1670250)
 
 # WooCommerce Steem Payment Method
-WooCommerce Steem Payment Method lets you accept Steem payments directly to your WooCommerce shop (Currencies: STEEM, SBD).
+Accept STEEM or SBD payments in your WooCommerce store via SteemConnect. Automatically converts from fiat (USD, EUR, etc) to STEEM. No transaction fees.
 
 ## Supported Steem Currencies
 - Steem (STEEM)
