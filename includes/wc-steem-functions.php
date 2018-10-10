@@ -84,19 +84,21 @@ function wc_steem_is_accepted_currency($currency_symbol) {
 # Fiat
 
 /**
- * Retrieve shop's base fiat currency symbol
+ * Retrieve shop's base fiat currency symbol.
  *
  * @since 1.0.1
- * @return string $fiat_currency
+ * @return string $store_currency_symbol
  */
 function wc_steem_get_base_fiat_currency() {
-	$fiat_currency = wc_steem_get_currency_symbol();
-
-	if ( ! in_array($fiat_currency, wc_steem_get_accepted_fiat_currencies())) {
-		$fiat_currency = apply_filters('wc_steem_base_default_fiat_currency', 'USD');
+	$store_currency_symbol = wc_steem_get_currency_symbol();
+	
+	// Allow accepted STEEM currencies (e.g. STEEM or SBD selected in plugin settings) or accepted fiat currencies.
+	// If the WooCommerce store currency is neither, then default to USD.
+	if ( ! wc_steem_is_accepted_currency( $store_currency_symbol ) && ! in_array($store_currency_symbol, wc_steem_get_accepted_fiat_currencies())) {
+		$store_currency_symbol = apply_filters('wc_steem_base_default_fiat_currency', 'USD');
 	}
 
-	return apply_filters('wc_steem_base_fiat_currency', $fiat_currency);
+	return apply_filters('wc_steem_base_fiat_currency', $store_currency_symbol);
 }
 
 /**
@@ -161,7 +163,7 @@ function wc_steem_get_rate($from_currency_symbol, $to_currency_symbol) {
 }
 
 /**
- * Convert the amount in USD to crypto amount
+ * Convert the amount from FIAT to crypto amount
  *
  * @since 1.0.0
  * @param float $amount
@@ -170,6 +172,10 @@ function wc_steem_get_rate($from_currency_symbol, $to_currency_symbol) {
  * @return float
  */
 function wc_steem_rate_convert($amount, $from_currency_symbol, $to_currency_symbol) {
+	// If from and to currency symbols are the same, return the same amount.
+	if ( strcmp( strtoupper( $from_currency_symbol ), strtoupper( $to_currency_symbol ) ) == 0 )
+		return $amount;
+	
 	$rate = wc_steem_get_rate($from_currency_symbol, $to_currency_symbol);
 
 	return apply_filters(

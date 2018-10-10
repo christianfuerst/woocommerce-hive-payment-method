@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd
 Requires at least: 4.1
 Tested up to: 4.9.8
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,6 +76,10 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.7 - 2018-10-10 =
+* STEEM, SBD currencies now allowed as WooCommerce store currency.
+* Sending payment to same STEEM wallet will now register as payment received. Helpful for testing order flow.
 
 = 1.0.6 - 2018-09-05 =
 * New version in WordPress Plugin Repository named "WooCommerce Steem Payment Method" (forked from WooCommerce Steem)
