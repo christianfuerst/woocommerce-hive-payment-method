@@ -35,6 +35,8 @@ class WC_Steem_Order_Handler {
 
 			<h2 class="woocommerce-steem-order-payment-details__title"><?php _e( 'Steem Payment details', 'wc-steem' ); ?></h2>
 
+			<p class="woocommerce-steem-payment-memo-prompt"><em>If you haven't already completed your payment:</em> Please don't forge to include the <strong>"MEMO"</strong> when making a transfer for this transaction to Steem.</p>
+			
 			<table class="woocommerce-table woocommerce-table--steem-order-payment-details shop_table steem_order_payment_details">
 				<tbody>
 					<tr>
@@ -59,8 +61,6 @@ class WC_Steem_Order_Handler {
 					</tr>
 				</tbody>
 			</table>
-
-			<p>Please don't forge to include the <strong>"MEMO"</strong> when making a transfer for this transaction to Steem.</p>
 
 			<?php do_action( 'wc_steem_order_payment_details_after_table', $order ); ?>
 
