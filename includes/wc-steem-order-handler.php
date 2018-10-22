@@ -74,20 +74,8 @@ class WC_Steem_Order_Handler {
 			<table class="woocommerce-table woocommerce-table--steem-order-transaction-details shop_table steem_order_payment_details">
 				<tbody>
 					<tr>
-						<th><?php _e('Steem Transaction ID', 'wc-steem'); ?></th>
-						<td><?php echo $transfer['tx_id']; ?></td>
-					</tr>
-					<tr>
-						<th><?php _e('Steem Transfer ID', 'wc-steem'); ?></th>
-						<td><?php echo $transfer['ID']; ?></td>
-					</tr>
-					<tr>
-						<th><?php _e('Payor', 'wc-steem'); ?></th>
-						<td><?php echo $transfer['from']; ?></td>
-					</tr>
-					<tr>
-						<th><?php _e('Paid on', 'wc-steem'); ?></th>
-						<td><?php printf('%s on %s', date('F j, Y', $transfer['timestamp']), date('g:i A', $transfer['timestamp'])); ?></td>
+						<th><?php _e('Steem Transaction', 'wc-steem'); ?></th>
+						<td><?php echo $transfer['transaction']; ?></td>
 					</tr>
 				</tbody>
 			</table>
