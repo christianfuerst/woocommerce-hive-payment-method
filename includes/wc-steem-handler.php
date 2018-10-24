@@ -31,7 +31,7 @@ class WC_Steem_Handler {
 		}
 		
 		if ( ! wp_next_scheduled('wc_steem_send_pending_payment_emails')) {
-			wp_schedule_event(time(), '1min', 'wc_steem_send_pending_payment_emails');
+			wp_schedule_event(time(), '5min', 'wc_steem_send_pending_payment_emails');
 		}		
 
 		if (empty(get_option('wc_steem_rates'))) {
@@ -204,7 +204,7 @@ class WC_Steem_Handler {
 		$now = new DateTime('now');
 		// If the order was set to pending less than 10 minutes ago don't send the email yet.
 		// Orders are updated every 5 minutes. This will allow time for the order to be automatically updated.
-		if($now->diff($order_modified_date)->i < 1) return;
+		if($now->diff($order_modified_date)->i < 10) return;
 
 		self::new_pending_order_emails($order);
 		
