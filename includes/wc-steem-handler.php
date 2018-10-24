@@ -31,7 +31,7 @@ class WC_Steem_Handler {
 		}
 		
 		if ( ! wp_next_scheduled('wc_steem_send_pending_payment_emails')) {
-			wp_schedule_event(time(), '5min', 'wc_steem_send_pending_payment_emails');
+			wp_schedule_event(time(), '1min', 'wc_steem_send_pending_payment_emails');
 		}		
 
 		if (empty(get_option('wc_steem_rates'))) {
@@ -204,7 +204,7 @@ class WC_Steem_Handler {
 		$now = new DateTime('now');
 		// If the order was set to pending less than 10 minutes ago don't send the email yet.
 		// Orders are updated every 5 minutes. This will allow time for the order to be automatically updated.
-		if($now->diff($order_modified_date)->i < 7) return;
+		if($now->diff($order_modified_date)->i < 1) return;
 
 		self::new_pending_order_emails($order);
 		
@@ -220,51 +220,51 @@ class WC_Steem_Handler {
 		if ($order->payment_method != 'wc_steem') return;		
 		
 		if( ! $order->has_status( 'pending' ) ) return;
-
-		$mailer = WC()->mailer();
+		
+		$wc_emails = WC()->mailer()->get_emails();
+		
+		$email = $wc_emails['WC_Email_New_Order'];		
 		
 		$heading = __('New Pending Order'); 
 		$subject = sprintf('New Pending Order %s', $order->get_order_number());
 		$recipient = get_option('woocommerce_email_from_address');
-
-		$template_path = "emails\admin-new-order.php";
-		$template_html = wc_get_template_html( $template_path, array(
-			'order'         => $order,
-			'email_heading' => $heading,
-			'sent_to_admin' => false,
-			'plain_text'    => false,
-			'email'         => $mailer
-		));	
-				
-		$headers = "Content-Type: text/html\r\n";
 		
-		$mailer->send( $recipient, $subject, $template_html, $headers );			
+		$template_path = "emails\admin-new-order.php";
+		$content_html = wc_get_template_html( $template_path, array(
+            'order'         => $order,
+            'email_heading' => $heading,
+            'sent_to_admin' => true,
+            'plain_text'    => false,
+            'email'         => $email,
+        ) );
+		
+		$email->send( $recipient, $subject, $content_html, $email->get_headers(), $email->get_attachments() );
 	}
 	
 	public static function new_pending_order_email_to_customer( $order ) {
 		if ($order->payment_method != 'wc_steem') return;
 		
 		if( ! $order->has_status( 'pending' ) ) return;
-		
-		$mailer = WC()->mailer();
+				
+		$wc_emails = WC()->mailer()->get_emails();
+				
+		$email = $wc_emails['WC_Email_Customer_Processing_Order'];
 		
 		$heading = __('Your Order Is Pending Payment'); 
 		$subject = sprintf('Your %s Order Is Pending Payment', get_bloginfo( 'name' ));
 		$recipient = $order->get_billing_email();
-
+		
 		$template_path = "emails\customer-processing-order.php";
 		
-		$template_html = wc_get_template_html( $template_path, array(
-			'order'         => $order,
-			'email_heading' => $heading,
-			'sent_to_admin' => false,
-			'plain_text'    => false,
-			'email'         => $mailer
-		));	
+		$content_html = wc_get_template_html( $template_path, array(
+            'order'         => $order,
+            'email_heading' => $heading,
+            'sent_to_admin' => false,
+            'plain_text'    => false,
+            'email'         => $email,
+        ) );
 		
-		$headers = "Content-Type: text/html\r\n";
-		
-		$mailer->send( $recipient, $subject, $template_html, $headers );		
+		$email->send( $recipient, $subject, $content_html, $email->get_headers(), $email->get_attachments() );
 	}
 
     public static function action_woocommerce_email_order_details( $order, $sent_to_admin, $plain_text, $email ) { 

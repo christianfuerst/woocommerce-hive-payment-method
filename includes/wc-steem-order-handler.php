@@ -77,6 +77,14 @@ class WC_Steem_Order_Handler {
 						<th><?php _e('Steem Transaction', 'wc-steem'); ?></th>
 						<td><?php echo $transfer['transaction']; ?></td>
 					</tr>
+					<tr>
+						<th><?php _e('Time', 'wc-steem'); ?></th>
+						<td><?php echo $transfer['time']; ?></td>
+					</tr>
+					<tr>
+						<th><?php _e('Memo', 'wc-steem'); ?></th>
+						<td><?php echo $transfer['memo']; ?></td>
+					</tr>					
 				</tbody>
 			</table>
 

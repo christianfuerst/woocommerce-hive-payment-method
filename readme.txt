@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd
 Requires at least: 4.1
 Tested up to: 4.9.8
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,6 +76,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.9 - 2018-10-23 =
+* Updated pending payment emails to use WC_Email class for sending
 
 = 1.0.8 - 2018-10-22 =
 * Fixed order receipt not displaying steem transaction details correctly.

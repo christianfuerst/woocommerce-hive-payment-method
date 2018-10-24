@@ -174,7 +174,7 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 			</p>',
 		);
 
-		$fields = wp_parse_args($fields, apply_filters('wc_steem_form_fields', $default_fields, $this->id)); ?>
+		$fields = wp_parse_args($default_fields, apply_filters('wc_steem_form_fields', $default_fields, $this->id)); ?>
 
 		<fieldset id="<?php echo esc_attr($this->id); ?>-steem-form" class='wc-steem-form wc-payment-form'>
 			<?php do_action('wc_steem_form_start', $this->id); ?>
