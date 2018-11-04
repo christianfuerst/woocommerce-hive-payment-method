@@ -3,10 +3,13 @@
  * Plugin Name: WooCommerce Steem Payment Method
  * Plugin URI: https://github.com/sagescrub/woocommerce-steem-payment-method
  * Description: Accept Steem payments directly to your shop (Currencies: STEEM, SBD).
- * Version: 1.0.9
+ * Version: 1.0.10
  * Author: <a href="https://steemit.com/@sagescrub">sagescrub</a>, <a href="https://steemit.com/@recrypto">ReCrypto</a>
  * Requires at least: 4.1
  * Tested up to: 4.9.8
+ *
+ * WC requires at least: 3.1
+ * WC tested up to: 3.4.7
  *
  * Text Domain: wc-steem-payment-method
  */

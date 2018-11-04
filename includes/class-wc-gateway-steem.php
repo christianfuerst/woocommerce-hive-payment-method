@@ -248,7 +248,7 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 		$order = new WC_Order($order_id);
 
 		// Reduce stock levels
-		$order->reduce_order_stock();
+		wc_reduce_stock_levels($order_id);
 
 		// Remove cart
 		WC()->cart->empty_cart();
@@ -259,7 +259,7 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 			update_post_meta($order_id, '_wc_steem_amount_currency', WC_Steem::get_amount_currency());
 			update_post_meta($order_id, '_wc_steem_memo', WC_Steem::get_memo());
 
-			update_post_meta($order->id, '_wc_steem_status', 'pending');
+			update_post_meta($order->get_id(), '_wc_steem_status', 'pending');
 
 			WC_Steem::reset();
 		}
@@ -274,7 +274,6 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 		$response = array(
 			'result' => 'success',
 			'redirect' => $steemConnectUrl
-			// 'redirect' => $this->get_return_url($order)			
 		);
 
 		return $response;
