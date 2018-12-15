@@ -23,7 +23,7 @@ class WC_Steem_Handler {
 		$instance = __CLASS__;
 
 		if ( ! wp_next_scheduled('wc_steem_update_rates')) {
-			wp_schedule_event(time(), '60min', 'wc_steem_update_rates');
+			wp_schedule_event(time(), 'hourly', 'wc_steem_update_rates');
 		}
 
 		if ( ! wp_next_scheduled('wc_steem_update_orders')) {

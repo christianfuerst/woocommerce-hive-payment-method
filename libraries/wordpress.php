@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /** WordPress helper functions *****************************************************************/
 
-
 /**
  * Register new WordPress schedules
  *
@@ -21,15 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array $schedules
  */
 function wc_steem_register_schedules($schedules) {
-
-	for ($minutes = 5; $minutes < 55; $minutes += 5) {
-		if ( ! isset($schedules["{$minutes}min"])) {
-			$schedules["{$minutes}min"] = array(
-				'interval' => $minutes * 60,
-				'display' => __(sprintf('Once every %d minutes', $minutes), 'wordpress'),
-			);
-		}
-	}
+	$schedules['5min'] = array(
+		'interval' => 5 * MINUTE_IN_SECONDS,
+		'display'  => __( 'Every 5 minutes' )
+	);
 
 	return $schedules;
 }

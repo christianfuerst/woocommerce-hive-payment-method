@@ -1,10 +1,10 @@
 === WooCommerce Steem Payment Method ===
 Contributors: sagescrub, recrypto
 Donate link: https://steemit.com/@sagescrub
-Tags: woocommerce, woo commerce, payment method, steem, sbd
+Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
-Tested up to: 4.9.8
-Stable tag: 1.0.10
+Tested up to: 5.0.1
+Stable tag: 1.0.11
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,6 +76,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.11 - 2018-12-14 =
+* Fixed cron event not being created for updating the exchange rates between fiat and STEEM/SBD
 
 = 1.0.10 - 2018-10-23 =
 * Updated deprecated WooCommerce functions
