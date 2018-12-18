@@ -45,18 +45,18 @@ class WC_Steem {
 		self::set('memo', $memo ? $memo : self::generate_memo());
 	}
 
-		public static function generate_memo($length = 10) {
-			$memo = null;
+	public static function generate_memo($length = 10) {
+		$memo = null;
 
-			$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-			$maximum_indexes = strlen($characters) - 1;
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$maximum_indexes = strlen($characters) - 1;
 
-			for ($i = 0; $i < $length; $i++) {
-				$memo .= $characters[mt_rand(0, $maximum_indexes)];
-			}
-
-			return apply_filters('wc_steem_generate_memo', $memo);
+		for ($i = 0; $i < $length; $i++) {
+			$memo .= $characters[mt_rand(0, $maximum_indexes)];
 		}
+
+		return apply_filters('wc_steem_generate_memo', $memo);
+	}
 
 
 	# Getters

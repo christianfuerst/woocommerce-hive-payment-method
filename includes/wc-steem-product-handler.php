@@ -71,13 +71,17 @@ class WC_Steem_Product_Handler {
 									); ?>
 								</div>
 							<?php elseif ($product->is_on_sale() && $min_reg_price === $max_reg_price) : ?>
+								<div class="wc-steem-price">
 								<?php self::display_price_sale(
 										wc_steem_rate_convert($min_reg_price, $from_currency_symbol, $to_currency_symbol),
 										wc_steem_rate_convert($max_reg_price, $from_currency_symbol, $to_currency_symbol),
 										$to_currency_symbol
 									); ?>
+								</div>
 							<?php else : ?>
-								<?php self::display_price(wc_steem_rate_convert($min_price, $from_currency_symbol, $to_currency_symbol), $to_currency_symbol); ?>
+								<div class="wc-steem-price">
+									<?php self::display_price(wc_steem_rate_convert($min_price, $from_currency_symbol, $to_currency_symbol), $to_currency_symbol); ?>
+								</div>
 							<?php endif; ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
@@ -174,12 +178,12 @@ class WC_Steem_Product_Handler {
 	 * @return void
 	 */
 	public static function display_price_sale($regular_price, $sale_price, $currency_symbol) { ?>
-		<del>
-			<?php self::display_price($regular_price, $currency_symbol); ?>
-		</del>
 		<ins>
 			<?php self::display_price($sale_price, $currency_symbol); ?>
 		</ins>
+		<del>
+			<?php self::display_price($regular_price, $currency_symbol); ?>
+		</del>
 		<?php
 	}
 }

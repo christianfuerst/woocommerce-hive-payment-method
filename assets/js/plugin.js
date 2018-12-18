@@ -14,7 +14,7 @@
 		var $amount = wc_get_amount($currency);
 
 		if ($amount > -1) {
-			$('#wc_steem-amount').html($amount);
+			$('#wc_steem-amount').html($amount + ' ' + $currency);
 		}
 	});
 

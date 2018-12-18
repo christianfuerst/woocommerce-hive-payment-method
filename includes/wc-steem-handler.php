@@ -137,6 +137,8 @@ class WC_Steem_Handler {
 
 			// Mark payment as completed
 			$order->payment_complete();
+			
+			$payee = wc_order_get_steem_payee($order->id);		
 
 			// Add intuitive order note
 			$order->add_order_note(
@@ -150,9 +152,10 @@ class WC_Steem_Handler {
 					// date('Y-m-d H:i:s', $transfer['timestamp'])
 				// )
 				sprintf(
-					__('WooCommerce Steem payment completed with transaction timestamped %s with memo %s: (%s)', 'wc-steem'), 
+					__('WooCommerce Steem payment completed.<br />Time: %s<br />Memo: %s<br />Payee: %s<br />%s', 'wc-steem'), 
 					$transfer['time'], 
 					$transfer['memo'], 
+					$payee,
 					$transfer['transaction']
 				)				
 			);

@@ -166,7 +166,7 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 		$default_fields = array(
 			'amount' => '<p class="form-row form-row-wide">
 				<label for="' . $this->field_id('amount') . '">' . esc_html__( 'Amount', 'wc-steem' ) . '</label>
-				<span id="' . $this->field_id('amount') . '">' . WC_Steem::get_amount() . '</span>
+				<span id="' . $this->field_id('amount') . '">' . WC_Steem::get_amount() . ' ' .  WC_Steem::get_amount_currency() . '</span>
 			</p>',
 			'amount_currency' => '<p class="form-row form-row-wide">
 				<label for="' . $this->field_id('amount-currency') . '">' . esc_html__( 'Currency', 'wc-steem' ) . '</label>
@@ -252,22 +252,30 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 
 		// Remove cart
 		WC()->cart->empty_cart();
+		
+		$payee = get_post_meta($order_id, '_wc_steem_payee', true);
+		$amount = get_post_meta($order_id, '_wc_steem_amount', true);
+		$currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
+		$memo = get_post_meta($order_id, '_wc_steem_memo', true);		
 
-		if (empty(get_post_meta($order_id, '_wc_steem_memo', true))) {
-			update_post_meta($order_id, '_wc_steem_payee', WC_Steem::get_payee());
-			update_post_meta($order_id, '_wc_steem_amount', WC_Steem::get_amount());
-			update_post_meta($order_id, '_wc_steem_amount_currency', WC_Steem::get_amount_currency());
-			update_post_meta($order_id, '_wc_steem_memo', WC_Steem::get_memo());
+		if (empty($memo)) {
+			$payee = WC_Steem::get_payee();
+			$amount = WC_Steem::get_amount();
+			$currency = WC_Steem::get_amount_currency();
+			$memo = WC_Steem::get_memo();
+
+			// Allow overriding payee on a per order basis
+			$payee = apply_filters('woocommerce_gateway_steem_steemconnect_payee', $payee, $order );			
+			
+			update_post_meta($order_id, '_wc_steem_payee', $payee);
+			update_post_meta($order_id, '_wc_steem_amount', $amount);
+			update_post_meta($order_id, '_wc_steem_amount_currency', $currency);
+			update_post_meta($order_id, '_wc_steem_memo', $memo);
 
 			update_post_meta($order->get_id(), '_wc_steem_status', 'pending');
 
 			WC_Steem::reset();
 		}
-
-		$payee = get_post_meta($order_id, '_wc_steem_payee', true);
-		$amount = get_post_meta($order_id, '_wc_steem_amount', true);
-		$currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
-		$memo = get_post_meta($order_id, '_wc_steem_memo', true);
 
 		$steemConnectUrl = "https://v2.steemconnect.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
 		
