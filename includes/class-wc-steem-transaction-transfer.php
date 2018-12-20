@@ -69,10 +69,13 @@ class WC_Steem_Transaction_Transfer {
 		
 		$tx = json_decode(file_get_contents("https://steakovercooked.com/api/steemit/transfer-history/?id=" . $data['to']), true);
 		foreach ($tx as $r) {
+			// Format the amount as a string to ensure 3 decimal places, no thousand seperator in order to find a match.
+			$amount = number_format( $data['amount'] , 3, "." , "" );
+			
 			// Match amount sent to this user in this currency
-			$transaction_message_1 = "Received " . $data['amount'] . " " . $data['amount_currency'] . " from ";
+			$transaction_message_1 = "Received " . $amount . " " . $data['amount_currency'] . " from ";
 			// Match amount sent to this user in this currency by this same user
-			$transaction_message_2 = "Transfer " . $data['amount'] . " " . $data['amount_currency'] . " to " . $data['to'];
+			$transaction_message_2 = "Transfer " . $amount . " " . $data['amount_currency'] . " to " . $data['to'];
 			
 			if ($data['memo'] === $r['memo'] &&
 				(
