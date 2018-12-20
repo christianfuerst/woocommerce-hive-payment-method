@@ -35,7 +35,7 @@ WooCommerce Steem Payment Method lets you accept Steem payments directly to your
 You will <strong>NOT</strong> require any Steem keys for this plugin to work. You just have to provide your Steem username and you're good to go.
 
 = Thanks =
-Special thanks to [@ReCrypto](https://steemit.com/@arcange) for being the author and inventor of the original "WooCommerce Steem" plugin before it was forked and updated into this plugin "WooCommerce Steem Payment Method". Thank you @ReCrypto for sharing your hard work!
+Special thanks to [@ReCrypto](https://steemit.com/@recrypto) for being the author and inventor of the original "WooCommerce Steem" plugin before it was forked and updated into this plugin "WooCommerce Steem Payment Method". Thank you @ReCrypto for sharing your hard work!
 
 = Disclaimer =
 Authors claim no responsibility for missed transactions, loss of your funds, loss of customer funds, incorrect or delayed exchange rates or any other issue you may encounter as a result of using this plugin. Use this plugin at your own risk.
