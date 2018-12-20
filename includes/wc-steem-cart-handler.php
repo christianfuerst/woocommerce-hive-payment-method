@@ -28,7 +28,7 @@ class WC_Steem_Cart_Handler {
 
 		if ($currencies = wc_steem_get_currencies()) {
 			foreach ($currencies as $to_currency_symbol => $currency) {
-				$amount = wc_steem_rate_convert($cart->total, $from_currency_symbol, $to_currency_symbol);
+				$amount = wc_steem_rate_convert($cart->get_total('edit'), $from_currency_symbol, $to_currency_symbol);
 				
 				if ($amount <= 0) {
 					continue;
@@ -45,8 +45,8 @@ class WC_Steem_Cart_Handler {
 
 			foreach ($currencies as $to_currency_symbol => $currency) {
 				if ( ! isset($amounts["{$to_currency_symbol}_{$from_currency_symbol}"])) {
-					$amounts["{$to_currency_symbol}_{$from_currency_symbol}"] = $cart->total;
-					WC_Steem::set('amount', $cart->total);
+					$amounts["{$to_currency_symbol}_{$from_currency_symbol}"] = $cart->get_total('edit');
+					WC_Steem::set('amount', $cart->get_total('edit'));
 				}
 			}
 

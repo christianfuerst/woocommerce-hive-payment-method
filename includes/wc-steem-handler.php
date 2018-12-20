@@ -123,11 +123,11 @@ class WC_Steem_Handler {
 			return;
 		}
 
-		if ($order->payment_method != 'wc_steem') {
+		if ($order->get_payment_method() != 'wc_steem') {
 			return;
 		}
 
-		if ( ! empty(get_post_meta($order->id, '_wc_steem_transaction_transfer', true))) {
+		if ( ! empty(get_post_meta($order->get_id(), '_wc_steem_transaction_transfer', true))) {
 			return;
 		}
 
@@ -138,7 +138,7 @@ class WC_Steem_Handler {
 			// Mark payment as completed
 			$order->payment_complete();
 			
-			$payee = wc_order_get_steem_payee($order->id);		
+			$payee = wc_order_get_steem_payee($order->get_id());		
 
 			// Add intuitive order note
 			$order->add_order_note(
@@ -160,8 +160,8 @@ class WC_Steem_Handler {
 				)				
 			);
 
-			update_post_meta($order->id, '_wc_steem_status', 'paid');
-			update_post_meta($order->id, '_wc_steem_transaction_transfer', $transfer);
+			update_post_meta($order->get_id(), '_wc_steem_status', 'paid');
+			update_post_meta($order->get_id(), '_wc_steem_transaction_transfer', $transfer);
 		}
 	}
 
@@ -198,7 +198,7 @@ class WC_Steem_Handler {
 	public static function send_pending_payment_email($order) {
 		if (empty($order) || is_wp_error($order)) return;
 
-		if ($order->payment_method != 'wc_steem') return;
+		if ($order->get_payment_method() != 'wc_steem') return;
 		
 		if( ! $order->has_status( 'pending' ) ) return;
 		
@@ -211,7 +211,7 @@ class WC_Steem_Handler {
 
 		self::new_pending_order_emails($order);
 		
-		update_post_meta($order->id, '_wc_steem_pending_payment_email_sent', 'true');
+		update_post_meta($order->get_id(), '_wc_steem_pending_payment_email_sent', 'true');
 	}
 	
 	public static function new_pending_order_emails( $order ) {
@@ -220,7 +220,7 @@ class WC_Steem_Handler {
 	}	
 		
 	public static function new_pending_order_email_to_admin( $order ) {
-		if ($order->payment_method != 'wc_steem') return;		
+		if ($order->get_payment_method() != 'wc_steem') return;		
 		
 		if( ! $order->has_status( 'pending' ) ) return;
 		
@@ -245,7 +245,7 @@ class WC_Steem_Handler {
 	}
 	
 	public static function new_pending_order_email_to_customer( $order ) {
-		if ($order->payment_method != 'wc_steem') return;
+		if ($order->get_payment_method() != 'wc_steem') return;
 		
 		if( ! $order->has_status( 'pending' ) ) return;
 				
@@ -271,7 +271,7 @@ class WC_Steem_Handler {
 	}
 
     public static function action_woocommerce_email_order_details( $order, $sent_to_admin, $plain_text, $email ) { 
-		if ($order->payment_method != 'wc_steem') return;	
+		if ($order->get_payment_method() != 'wc_steem') return;	
 		
 		if( ! $order->has_status( 'pending' ) ) return;
 		

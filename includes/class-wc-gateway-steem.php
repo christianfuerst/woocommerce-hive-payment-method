@@ -325,6 +325,6 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 	 * @return boolean
 	 */
 	public function can_refund_order($order) {
-		return get_post_meta($order->id, '_payment_method', true) == 'wc_steem' && false;
+		return $order->get_payment_method() == 'wc_steem' && false;
 	}
 }

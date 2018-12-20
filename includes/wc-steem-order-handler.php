@@ -28,7 +28,7 @@ class WC_Steem_Order_Handler {
 	public static function payment_details($order_id) {
 		$order = wc_get_order($order_id);
 
-		if ($order->payment_method != 'wc_steem') 
+		if ($order->get_payment_method() != 'wc_steem') 
 			return; ?>
 
 		<section class="woocommerce-steem-order-payment-details">
@@ -66,7 +66,7 @@ class WC_Steem_Order_Handler {
 
 		</section>
 
-		<?php if ($transfer = get_post_meta($order->id, '_wc_steem_transaction_transfer', true)) : ?>
+		<?php if ($transfer = get_post_meta($order->get_id(), '_wc_steem_transaction_transfer', true)) : ?>
 		<section class="woocommerce-steem-order-transaction-details">
 
 			<h2 class="woocommerce-steem-order-transaction-details__title"><?php _e( 'Steem Transfer details', 'wc-steem' ); ?></h2>

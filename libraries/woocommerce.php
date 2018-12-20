@@ -28,7 +28,7 @@ function wc_steem_get_order_user_id($order) {
 	if (is_int($order)) {
 		$order_id = $order;
 	} elseif ($order instanceof WC_Order) {
-		$order_id = $order->id;
+		$order_id = $order->get_id();
 	} elseif ($order instanceof WP_Post) {
 		$order_id = $order->ID;
 	}

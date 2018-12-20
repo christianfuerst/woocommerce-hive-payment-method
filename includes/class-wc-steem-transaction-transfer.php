@@ -29,15 +29,15 @@ class WC_Steem_Transaction_Transfer {
 			$order = wc_get_order($order);
 		}
 
-		if (empty($order) || is_wp_error($order) || $order->payment_method != 'wc_steem') {
+		if (empty($order) || is_wp_error($order) || $order->get_payment_method() != 'wc_steem') {
 			return $transfer;
 		}
 
 		$data = array(
-			'to' => wc_order_get_steem_payee($order->id),
-			'memo' => wc_order_get_steem_memo($order->id),
-			'amount' => wc_order_get_steem_amount($order->id),
-			'amount_currency' => wc_order_get_steem_amount_currency($order->id),
+			'to' => wc_order_get_steem_payee($order->get_id()),
+			'memo' => wc_order_get_steem_memo($order->get_id()),
+			'amount' => wc_order_get_steem_amount($order->get_id()),
+			'amount_currency' => wc_order_get_steem_amount_currency($order->get_id()),
 		);
 
 		if (empty($data['to']) || empty($data['memo']) || empty($data['amount'] || empty($data['amount_currency']))) {

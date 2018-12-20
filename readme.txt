@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
 Tested up to: 5.0.1
-Stable tag: 1.0.12
+Stable tag: 1.0.13
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,6 +76,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.13 - 2018-12-19 =
+* Removed direct access to properties on WC_Order and WC_Cart objects
 
 = 1.0.12 - 2018-12-17 =
 * Added currency symbol (STEEM/SBD) on the checkout page next to the amount that is displayed.
