@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
 Tested up to: 5.0.1
-Stable tag: 1.0.14
+Stable tag: 1.0.15
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -76,6 +76,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.15 - 2018-12-20 =
+* Revived international currency rates conversion using Exchange Rates API (exchangeratesapi.io)
 
 = 1.0.14 - 2018-12-19 =
 * Fixed bug detecting payment

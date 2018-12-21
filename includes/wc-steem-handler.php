@@ -64,8 +64,8 @@ class WC_Steem_Handler {
 			}
 		}
 
-		// Fixer API is deprecated. Need to update to their new API 
-/* 		$response = wp_remote_get('http://api.fixer.io/latest?base=USD');
+ 		//$response = wp_remote_get('http://api.fixer.io/latest?base=USD');
+ 		$response = wp_remote_get('https://api.exchangeratesapi.io/latest?base=USD');
 
 		if (is_array($response)) {
 			$tickers = json_decode(wp_remote_retrieve_body($response), true);
@@ -83,7 +83,7 @@ class WC_Steem_Handler {
 					}
 				}
 			}
-		} */
+		}
 
 		update_option('wc_steem_rates', $rates);
 	}
