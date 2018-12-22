@@ -255,29 +255,54 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 		
 		$payee = get_post_meta($order_id, '_wc_steem_payee', true);
 		$amount = get_post_meta($order_id, '_wc_steem_amount', true);
-		$currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
+		$amount_currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
 		$memo = get_post_meta($order_id, '_wc_steem_memo', true);		
-
+		$from_amount = get_post_meta($order_id, '_wc_steem_from_amount', true);	
+		$from_currency = get_post_meta($order_id, '_wc_steem_from_currency', true);	
+		$exchange_rate = get_post_meta($order_id, '_wc_steem_exchange_rate', true);	
+		
 		if (empty($memo)) {
 			$payee = WC_Steem::get_payee();
 			$amount = WC_Steem::get_amount();
-			$currency = WC_Steem::get_amount_currency();
+			$amount_currency = WC_Steem::get_amount_currency();
 			$memo = WC_Steem::get_memo();
+			$from_amount = WC_Steem::get_from_amount();
+			$from_currency = WC_Steem::get_from_currency();
+			$exchange_rate = WC_Steem::get_exchange_rate();
 
 			// Allow overriding payee on a per order basis
 			$payee = apply_filters('woocommerce_gateway_steem_steemconnect_payee', $payee, $order );			
 			
 			update_post_meta($order_id, '_wc_steem_payee', $payee);
 			update_post_meta($order_id, '_wc_steem_amount', $amount);
-			update_post_meta($order_id, '_wc_steem_amount_currency', $currency);
+			update_post_meta($order_id, '_wc_steem_amount_currency', $amount_currency);
 			update_post_meta($order_id, '_wc_steem_memo', $memo);
+			update_post_meta($order_id, '_wc_steem_from_amount', $from_amount);
+			update_post_meta($order_id, '_wc_steem_from_currency', $from_currency);
+			update_post_meta($order_id, '_wc_steem_exchange_rateo', $exchange_rate);
 
 			update_post_meta($order->get_id(), '_wc_steem_status', 'pending');
+			
+			// Add order note indicating details of payment request
+			$order->add_order_note(
+				sprintf(
+					__('Steem payment <strong>Initiated</strong>:<br />Payee: %s<br />Amount Due: %s %s<br />Converted From: %s %s<br />Exchange Rate: 1 %s = %s %s<br />Memo: %s', 'wc-steem'), 
+					$payee, 
+					$amount,
+					$amount_currency,
+					$from_amount,
+					$from_currency,
+					$from_currency,
+					$exchange_rate,
+					$amount_currency,
+					$memo
+				)				
+			);			
 
 			WC_Steem::reset();
 		}
 
-		$steemConnectUrl = "https://v2.steemconnect.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
+		$steemConnectUrl = "https://v2.steemconnect.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $amount_currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
 		
 		$response = array(
 			'result' => 'success',
@@ -297,13 +322,18 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 
 		$amount_currency = isset($_POST[$this->field_id('amount_currency')]) ? $_POST[$this->field_id('amount_currency')] : 'STEEM';
 		$from_currency_symbol = wc_steem_get_base_fiat_currency();
-
+		
+		WC_Steem::set_from_currency($from_currency_symbol);
+		
 		if (wc_steem_is_accepted_currency($amount_currency)) {
 			WC_Steem::set_amount_currency($amount_currency);
 
-			if ($amounts = WC_Steem::get('amounts')) {
+			if ($amounts = WC_Steem::get_amounts()) {
 				if (isset($amounts[WC_Steem::get_amount_currency() . '_' . $from_currency_symbol])) {
 					WC_Steem::set_amount($amounts[WC_Steem::get_amount_currency() . '_' . $from_currency_symbol]);
+					
+					// Get exchange rate based off 1 unit of the base fiat currency
+					WC_Steem::set_exchange_rate(wc_steem_rate_convert(1, $from_currency_symbol, WC_Steem::get_amount_currency()));
 				}
 			}
 		}

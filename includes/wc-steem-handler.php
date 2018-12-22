@@ -152,7 +152,7 @@ class WC_Steem_Handler {
 					// date('Y-m-d H:i:s', $transfer['timestamp'])
 				// )
 				sprintf(
-					__('WooCommerce Steem payment completed.<br />Time: %s<br />Memo: %s<br />Payee: %s<br />%s', 'wc-steem'), 
+					__('Steem payment <strong>Received</strong><br />Time: %s<br />Memo: %s<br />Payee: %s<br />%s', 'wc-steem'), 
 					$transfer['time'], 
 					$transfer['memo'], 
 					$payee,

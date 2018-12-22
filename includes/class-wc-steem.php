@@ -44,6 +44,22 @@ class WC_Steem {
 	public static function set_memo($memo = '') {
 		self::set('memo', $memo ? $memo : self::generate_memo());
 	}
+	
+	public static function set_from_amount($from_amount) {
+		self::set('from_amount', $from_amount);
+	}	
+	
+	public static function set_from_currency($from_currency) {
+		self::set('from_currency', $from_currency);
+	}
+
+	public static function set_exchange_rate($exchange_rate) {
+		self::set('exchange_rate', $exchange_rate);
+	}	
+	
+	public static function set_amounts($amounts) {
+		self::set('amounts', $amounts);
+	}		
 
 	public static function generate_memo($length = 10) {
 		$memo = null;
@@ -76,7 +92,23 @@ class WC_Steem {
 	public static function get_memo() {
 		return self::get('memo');
 	}
+	
+	public static function get_from_amount() {
+		return self::get('from_amount');
+	}	
 
+	public static function get_from_currency() {
+		return self::get('from_currency');
+	}
+
+	public static function get_exchange_rate() {
+		return self::get('exchange_rate');
+	}
+	
+	public static function get_amounts() {
+		return self::get('amounts');
+	}
+	
 
 	# Helpers
 
@@ -95,6 +127,9 @@ class WC_Steem {
 			'amount_currency',
 			'memo',
 			'amounts',
+			'from_amount',
+			'from_currency',
+			'exchange_rate',
 		);
 
 		foreach ($keys as $key) {

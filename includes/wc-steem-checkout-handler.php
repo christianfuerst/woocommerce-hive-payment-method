@@ -26,7 +26,7 @@ class WC_Steem_Checkout_Handler {
 		wp_localize_script('wc-steem', 'wc_steem', array(
 			'cart' => array(
 				'base_currency' => wc_steem_get_base_fiat_currency(),
-				'amounts' => WC_Steem::get('amounts'),
+				'amounts' => WC_Steem::get_amounts(),
 			),
 		));
 	}
