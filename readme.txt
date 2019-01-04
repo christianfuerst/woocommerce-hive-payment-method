@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
 Tested up to: 5.0.1
-Stable tag: 1.0.16
+Stable tag: 1.0.17
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -31,11 +31,25 @@ WooCommerce Steem Payment Method lets you accept Steem payments directly to your
 - Currently supports fiat currencies such as: AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, GBP, HKD, HRK, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, TRY, ZAR, EUR
 - If none of the fiat currency listed above, it will default 1:1 conversion rate between your store's currency and STEEM or SBD.
 
+= How it Works Behind The Scenes =
+* Exchange rates are updated every hour
+* FIAT foreign exchange rates are gathered from the European Central Bank's free API
+* STEEM exchange rates are determined using Poloniex by converting USDT -> BTC -> STEEM (or SBD)
+* Your store's steem wallet is scanned every 5 minutes for pending transactions (if there are any orders with pending payment)
+* If an order is Pending Payment for too long it will be automatically canceled by WooCommerce default settings. You can change the timing or disable this feature in WooCommerce -> Settings -> Products -> Inventory -> Hold Stock (Minutes)
+
+= Technical Requirements =
+This plugin requires WordPress CRON jobs to be enabled. If CRON jobs are not enabled, currency exchange rates will not be updated and this plugin will not be able to search for STEEM payment records. If your exchange rates are not updating or if orders were paid for but still say "Payment Pending" or are automatically canceled, it is likely that CRON jobs are not enabled on your server or are not functioning properly.
+
+Order payments should normally be reflected in the order automatically within 5-10 minutes max. If the order is is still status Payment Pending or becomes cancelled more than 10-15 minutes, it is likely that your CRON jobs are not enabled.
+
 = Security Note =
-You will <strong>NOT</strong> require any Steem keys for this plugin to work. You just have to provide your Steem username and you're good to go.
+You will <strong>NOT</strong> be required to enter any steem private keys into this plugin. You only have to provide your steem username so that the plugin knows where payments should be sent.
 
 = Thanks =
-Special thanks to [@ReCrypto](https://steemit.com/@recrypto) for being the author and inventor of the original "WooCommerce Steem" plugin before it was forked and updated into this plugin "WooCommerce Steem Payment Method". Thank you @ReCrypto for sharing your hard work!
+* Special thanks to [@justyy](https://steemit.com/@justyy) for providing free steem APIs. This plugin uses one of @justyy's apis to find matching transactions. Consider giving @justyy a vote for witness to support his efforts providing free steem APIs and other tools.
+
+* Special thanks to [@ReCrypto](https://steemit.com/@recrypto) for being the author and inventor of the original "WooCommerce Steem" plugin before it was forked and updated into this plugin "WooCommerce Steem Payment Method". Thank you @ReCrypto for sharing your hard work!
 
 = Disclaimer =
 Authors claim no responsibility for missed transactions, loss of your funds, loss of customer funds, incorrect or delayed exchange rates or any other issue you may encounter as a result of using this plugin. Use this plugin at your own risk.
@@ -76,6 +90,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.17 - 2019-1-3 =
+* Updated Readme files
 
 = 1.0.16 - 2018-12-22 =
 * Added order note for payment requested including exchange rate, from and to amounts and currencies.
