@@ -3,8 +3,8 @@ Contributors: sagescrub, recrypto
 Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
-Tested up to: 5.0.1
-Stable tag: 1.0.17
+Tested up to: 5.0.3
+Stable tag: 1.0.18
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -90,6 +90,10 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.18 - 2019-1-23 =
+* Added error handling for querying steem transfer history
+* Tweaked querying steem transfer history to prevent unneeded usage of API
 
 = 1.0.17 - 2019-1-3 =
 * Updated Readme files

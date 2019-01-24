@@ -41,33 +41,25 @@ class WC_Steem_Transaction_Transfer {
 		);
 
 		if (empty($data['to']) || empty($data['memo']) || empty($data['amount'] || empty($data['amount_currency']))) {
+			// Initial transaction data not found in this order. Mark the order as searched so that it is not queried again.
+			update_post_meta($order->get_id(), '_wc_steem_last_searched_for_transaction', date('m/d/Y h:i:s a', time()));
+			
 			return $transfer;
 		}
-
-		/*
-		$response = wp_remote_get(
-			add_query_arg(
-				array(
-					'to' => $data['to'],
-					'memo' => $data['memo'],
-					'amount' => $data['amount'],
-					'amount_symbol' => $data['amount_currency'],
-					'limit' => 1,
-				),
-				'http://steemful.com/api/v1/transactions/transfers'
-			)
-		);
-
-		if (is_array($response)) {
-			$response_body = json_decode(wp_remote_retrieve_body($response), true);
-
-			if (isset($response_body['data'][0]) && $response_body['data'][0]) {
-				$transfer = $response_body['data'][0];
-			}
-		}
-		*/
 		
-		$tx = json_decode(file_get_contents("https://steakovercooked.com/api/steemit/transfer-history/?id=" . $data['to']), true);
+		$file_contents = file_get_contents("https://steakovercooked.com/api/steemit/transfer-history/?id=" . $data['to']);
+		
+		// If failure in retrieving url
+		if ($file_contents === false)
+			return $transfer;
+		
+		$tx = json_decode($file_contents, true);
+		
+		// If error decoding JSON
+		if (JSON_ERROR_NONE !== json_last_error()) {
+			return $transfer;
+		}
+				
 		foreach ($tx as $r) {
 			// Format the amount as a string to ensure 3 decimal places, no thousand seperator in order to find a match.
 			$amount = number_format( $data['amount'] , 3, "." , "" );
@@ -87,6 +79,9 @@ class WC_Steem_Transaction_Transfer {
 				break;
 			}
 		}
+		
+		// Successfully (no errors in retrieving JSON) searched transaction history for the record.
+		update_post_meta($order->get_id(), '_wc_steem_last_searched_for_transaction', date('m/d/Y h:i:s a', time()));
 		
 		return $transfer;
 	}

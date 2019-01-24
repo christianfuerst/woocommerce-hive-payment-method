@@ -90,10 +90,12 @@ class WC_Steem_Handler {
 
 	public static function update_orders() {
 
-		$orders = get_posts(array(
+		// Only search for transactions for orders that were placed 30 minutes ago.
+		// Orders within the last 30 minutes and no matching transaction has been found yet.
+		$query1 = new WP_Query(array(
 			'post_type' => 'shop_order',
 			'post_status' => 'wc-pending',
-			'posts_per_page' => 20,
+			'posts_per_page' => 100,
 			'meta_query' => array(
 				'relation' => 'AND',
 				array(
@@ -106,19 +108,58 @@ class WC_Steem_Handler {
 					'compare' => 'NOT EXISTS',
 				),
 			),
+			// Only include orders that were placed within the last 30 minutes
+			'date_query'    => array(
+				'column'  => 'post_date',
+				'after'   => '30 minutes ago',
+				'inclusive' => true,
+			),
+			'fields' => 'ids',
 		));
+		
+		// Orders greater than 30 minutes ago and transactions have not been searched yet for this order.
+		// e.g. cron was disabled or search failed previously.
+		// These older orders will only be queried once and them marked that they have been queried.
+		$query2 = new WP_Query(array(
+			'post_type' => 'shop_order',
+			'post_status' => 'wc-pending',
+			'posts_per_page' => 100,
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key' => '_payment_method',
+					'value' => 'wc_steem',
+					'compare' => '=',
+				),
+				// Transaction has not been queried yet. 
+				array(
+					'key' => '_wc_steem_last_searched_for_transaction',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+			// Only include orders that were placed before the last 30 minutes
+			'date_query'    => array(
+				'column'  => 'post_date',
+				'before'   => '30 minutes ago',
+				'inclusive' => false,
+			),
+			'fields' => 'ids',
+		));
+		
+		$order_post_ids = array_merge( $query1->posts, $query2->posts );
 
-		if (empty($orders) || is_wp_error($orders)) {
+		if (empty($order_post_ids) || is_wp_error($order_post_ids)) {
 			return;
 		}
-
-		foreach ($orders as $order) {
-			$order = wc_get_order($order);
+		
+		foreach ($order_post_ids as $key => $order_post_id) {
+			$order = new WC_Order($order_post_id);
 			self::update_order($order);
 		}
 	}
 
 	public static function update_order($order) {
+
 		if (empty($order) || is_wp_error($order)) {
 			return;
 		}
@@ -132,25 +173,15 @@ class WC_Steem_Handler {
 		}
 
 		$transfer = WC_Steem_Transaction_Transfer::get($order);
-
+		
 		if ($transfer != null) {
-
 			// Mark payment as completed
 			$order->payment_complete();
 			
-			$payee = wc_order_get_steem_payee($order->get_id());		
+			$payee = wc_order_get_steem_payee($order->get_id());
 
 			// Add intuitive order note
 			$order->add_order_note(
-				// sprintf(
-					// __('WooCommerce Steem payment completed with transaction (ID: %s) and transfer (ID: %s) with the amount of %s %s by %s on %s.', 'wc-steem'), 
-					// $transfer['tx_id'], 
-					// $transfer['ID'], 
-					// $transfer['amount'], 
-					// $transfer['amount_symbol'], 
-					// $transfer['from'], 
-					// date('Y-m-d H:i:s', $transfer['timestamp'])
-				// )
 				sprintf(
 					__('Steem payment <strong>Received</strong><br />Time: %s<br />Memo: %s<br />Payee: %s<br />%s', 'wc-steem'), 
 					$transfer['time'], 
@@ -162,7 +193,7 @@ class WC_Steem_Handler {
 
 			update_post_meta($order->get_id(), '_wc_steem_status', 'paid');
 			update_post_meta($order->get_id(), '_wc_steem_transaction_transfer', $transfer);
-		}
+		}		
 	}
 
 	public static function send_pending_payment_emails() {
