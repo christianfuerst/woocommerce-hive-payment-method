@@ -100,6 +100,12 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 				'label'   => __('Shows an insightful prices on products that displays the accepted currencies such as SBD and/or STEEM rates converted from the product price.', 'wc-steem'),
 				'default' => 'no'
 			),
+			'show_discounted_price' => array(
+				'title'   => __('Show Discounted Price', 'wc-steem'),
+				'type'    => 'checkbox',
+				'label'   => __('If enabled, products that are on sale will display the original price in STEEM/SBD with strikethrough. Only operational when "Enable insightful prices on products" is enabled.', 'wc-steem'),
+				'default' => 'no'
+			),			
 		);
 	}
 
@@ -272,6 +278,7 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 
 			// Allow overriding payee on a per order basis
 			$payee = apply_filters('woocommerce_gateway_steem_steemconnect_payee', $payee, $order );			
+			$memo = apply_filters('woocommerce_gateway_steem_steemconnect_memo', $memo, $order );			
 			
 			update_post_meta($order_id, '_wc_steem_payee', $payee);
 			update_post_meta($order_id, '_wc_steem_amount', $amount);

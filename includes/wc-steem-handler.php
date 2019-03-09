@@ -27,7 +27,7 @@ class WC_Steem_Handler {
 		}
 
 		if ( ! wp_next_scheduled('wc_steem_update_orders')) {
-			wp_schedule_event(time(), '5min', 'wc_steem_update_orders');
+			wp_schedule_event(time(), '2min', 'wc_steem_update_orders');
 		}
 		
 		if ( ! wp_next_scheduled('wc_steem_send_pending_payment_emails')) {

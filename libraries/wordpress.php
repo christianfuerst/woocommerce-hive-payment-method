@@ -24,6 +24,11 @@ function wc_steem_register_schedules($schedules) {
 		'interval' => 5 * MINUTE_IN_SECONDS,
 		'display'  => __( 'Every 5 minutes' )
 	);
+	
+	$schedules['2min'] = array(
+		'interval' => 2 * MINUTE_IN_SECONDS,
+		'display'  => __( 'Every 2 minutes' )
+	);	
 
 	return $schedules;
 }

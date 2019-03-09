@@ -113,10 +113,16 @@ class WC_Steem {
 	# Helpers
 
 	public static function get($key) {
+		if (!isset(WC()->session))
+			return null;
+		
 		return WC()->session->get("wc_steem_{$key}");
 	}
 
 	public static function set($key, $value) {
+		if (!isset(WC()->session))
+			return;
+		
 		return WC()->session->set("wc_steem_{$key}", $value);
 	}
 

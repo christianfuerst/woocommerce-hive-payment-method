@@ -181,9 +181,13 @@ class WC_Steem_Product_Handler {
 		<ins>
 			<?php self::display_price($sale_price, $currency_symbol); ?>
 		</ins>
+		
+		<?php if (wc_steem_get_setting('show_discounted_price') == 'yes') { ?>
 		<del>
 			<?php self::display_price($regular_price, $currency_symbol); ?>
 		</del>
+		<?php }	?>
+
 		<?php
 	}
 }

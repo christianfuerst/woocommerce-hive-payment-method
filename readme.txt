@@ -3,8 +3,8 @@ Contributors: sagescrub, recrypto
 Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
-Tested up to: 5.0.3
-Stable tag: 1.0.18
+Tested up to: 5.1
+Stable tag: 1.0.19
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -90,6 +90,11 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.0.19 - 2019-3-8 =
+* Reduced the time of checking for matching transaction history from 5 minutes to 2 minutes.
+* Added filter for setting the transaction memo
+* Added admin option to show discounted price in STEEM/SBD. If enabled products that are on sale will display the original price in STEEM/SBD with strikethrough.
 
 = 1.0.18 - 2019-1-23 =
 * Added error handling for querying steem transfer history
