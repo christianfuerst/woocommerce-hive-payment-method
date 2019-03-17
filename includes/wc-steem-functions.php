@@ -129,61 +129,36 @@ function wc_steem_is_accepted_fiat_currency($currency_symbol) {
 # Rates
 
 /**
- * Retrieve Steem rates
- *
- * @since 1.0.0
- * @return array
- */
-function wc_steem_get_rates() {
-	return get_option('wc_steem_rates', array());
-}
-
-/**
- * Retrieve rate
- *
- * @since 1.0.0
- * @param string $from_currency_symbol
- * @param string $to_currency_symbol
- * @return float
- */
-function wc_steem_get_rate($from_currency_symbol, $to_currency_symbol) {
-	$rates = wc_steem_get_rates();
-
-	$from_currency_symbol = strtoupper($from_currency_symbol);
-	$to_currency_symbol = strtoupper($to_currency_symbol);
-
-	$pair_currency_symbol = "{$to_currency_symbol}_{$from_currency_symbol}";
-
-	return apply_filters(
-		'wc_steem_rate', 
-		(isset($rates[$pair_currency_symbol]) ? $rates[$pair_currency_symbol] : null), 
-		$from_currency_symbol, 
-		$to_currency_symbol
-	);
-}
-
-/**
  * Convert the amount from FIAT to crypto amount
  *
  * @since 1.0.0
  * @param float $amount
- * @param string $from_currency_symbol
- * @param string $to_currency_symbol
+ * @param string $from_fiat_currency_symbol
+ * @param string $to_steem_sbd_currency_symbol
  * @return float
  */
-function wc_steem_rate_convert($amount, $from_currency_symbol, $to_currency_symbol) {
+function wc_steem_rate_convert($amount, $from_fiat_currency_symbol, $to_steem_sbd_currency_symbol) {
 	// If from and to currency symbols are the same, return the same amount.
-	if ( strcmp( strtoupper( $from_currency_symbol ), strtoupper( $to_currency_symbol ) ) == 0 )
+	if ( strcmp( strtoupper( $from_fiat_currency_symbol ), strtoupper( $to_steem_sbd_currency_symbol ) ) == 0 )
 		return $amount;
 	
-	$rate = wc_steem_get_rate($from_currency_symbol, $to_currency_symbol);
+	$rates_handler = new WC_Steem_Rates_Handler();
 
+	$rate = $rates_handler->get_fiat_to_steem_exchange_rate($from_fiat_currency_symbol, $to_steem_sbd_currency_symbol);
+
+	$rate = apply_filters(
+		'wc_steem_rate', 
+		$rate, 
+		$from_fiat_currency_symbol, 
+		$to_steem_sbd_currency_symbol
+	);
+	
 	return apply_filters(
 		'wc_steem_rate_convert', 
 		($rate > 0 ? round($amount / $rate, 3, PHP_ROUND_HALF_UP) : 0), 
 		$amount, 
-		$from_currency_symbol, 
-		$to_currency_symbol
+		$from_fiat_currency_symbol, 
+		$to_steem_sbd_currency_symbol
 	);
 }
 

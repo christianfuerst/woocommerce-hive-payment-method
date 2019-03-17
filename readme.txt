@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
 Tested up to: 5.1
-Stable tag: 1.0.19
+Stable tag: 1.1.0
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -32,16 +32,23 @@ WooCommerce Steem Payment Method lets you accept Steem payments directly to your
 - If none of the fiat currency listed above, it will default 1:1 conversion rate between your store's currency and STEEM or SBD.
 
 = How it Works Behind The Scenes =
-* Exchange rates are updated every hour
+* Exchange rates are updated once an hour
 * FIAT foreign exchange rates are gathered from the European Central Bank's free API
-* STEEM exchange rates are determined using Poloniex by converting USDT -> BTC -> STEEM (or SBD)
+* STEEM/SBD exchange rates are determined by querying three exchanges and taking the average: Binance, Bittrex and Poloniex.
+* Binance rates are determined by converting USDT (Tether) -> BTC -> STEEM (SBD is not supported by Binance)
+* Bittrex rates are determined by converting USD -> BTC -> STEEM / SBD
+* Poloniex rates are determined by converting USDT (Tether) -> BTC -> STEEM /SBD
 * Your store's steem wallet is scanned every 5 minutes for pending transactions (if there are any orders with pending payment)
 * If an order is Pending Payment for too long it will be automatically canceled by WooCommerce default settings. You can change the timing or disable this feature in WooCommerce -> Settings -> Products -> Inventory -> Hold Stock (Minutes)
 
 = Technical Requirements =
+WooCommerce plugin must be installed before you install this plugin.
+
 This plugin requires WordPress CRON jobs to be enabled. If CRON jobs are not enabled, currency exchange rates will not be updated and this plugin will not be able to search for STEEM payment records. If your exchange rates are not updating or if orders were paid for but still say "Payment Pending" or are automatically canceled, it is likely that CRON jobs are not enabled on your server or are not functioning properly.
 
 Order payments should normally be reflected in the order automatically within 5-10 minutes max. If the order is is still status Payment Pending or becomes cancelled more than 10-15 minutes, it is likely that your CRON jobs are not enabled.
+
+An alternative to using WordPress CRON jobs is setting up a real Crontab. A real Crontab is more efficient than using WordPress CRON jobs, and so you may prefer this approach. You can find instructions for setting up a real Crontab here: https://helloacm.com/setting-up-a-real-crontab-for-wordpress/
 
 = Security Note =
 You will <strong>NOT</strong> be required to enter any steem private keys into this plugin. You only have to provide your steem username so that the plugin knows where payments should be sent.
@@ -68,7 +75,7 @@ Authors claim no responsibility for missed transactions, loss of your funds, los
 When the customer initiates payment the SteemConnect window will be opened (see screenshot). SteemConnect will be populated with the payment amount, currency and memo. The automatically generated memo is a random key that is matched to the order.
 
 = How does it confirm Steem Transfers? =
-It uses queries the store's STEEM wallet history every 5 minutes to and checks for a transaction that matches the payment MEMO, amount and currency (STEEM or SBD). When the matching payment is found, the order is marked from "payment pending" to "processing".
+It uses queries the store's STEEM wallet history every 2 minutes to and checks for a transaction that matches the payment MEMO, amount and currency (STEEM or SBD). When the matching payment is found, the order is marked from "payment pending" to "processing".
 
 = What is the payment reminder email? =
 If the customer does not complete the payment via SteemConnect within several minutes of initiating the payment, a confirmation email will be sent reminding the customer to make payment manually via steem (see screenshot). The payment reminder email will include instructions including the memo.
@@ -90,6 +97,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.1.0 - 2019-3-16 =
+* Added two new crypto exchanges to query for STEEM/SBD exchange rates. Now a total of three exchanges are queried: Binance, Bittrex and Poloniex. The rates are averaged.
 
 = 1.0.19 - 2019-3-8 =
 * Reduced the time of checking for matching transaction history from 5 minutes to 2 minutes.

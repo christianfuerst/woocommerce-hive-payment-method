@@ -9,7 +9,7 @@ Accept STEEM or SBD payments in your WooCommerce store via SteemConnect. Automat
 
 ## Details
 * There is no extra transaction fee. Payments are made directly between customer and store owner via SteemConnect. 
-* This plugin will automatically detect if payment was made once it is posted to Steem Blockchain. 
+* This plugin will automatically detect if payment was made once it is posted to Steem Blockchain. Payment detection is not instant; it can take up to 5 minutes for the payment to be detected.
 * If payment is not completed within several minutes of submitting an order an automatic payment reminder email will be sent to the customer with instructions for submitting payment. This is a fallback for 1) the customer doesn't complete the transaction, and 2) the payment detection functionality in this plugin stops working for any reason.
 * Currency exchange rate between FIAT and STEEM/SBD is automatically calculated at time of checkout.
 * Currency exchange rate between FIAT and STEEM/SBD can be optionally displayed below the product price on the product page.
@@ -19,16 +19,23 @@ Accept STEEM or SBD payments in your WooCommerce store via SteemConnect. Automat
 - If none of the fiat currency listed above, it will default 1:1 conversion rate.
 
 ## How it Works Behind The Scenes
-* Exchange rates are updated every hour
+* Exchange rates are updated once an hour
 * FIAT foreign exchange rates are gathered from the European Central Bank's free API
-* STEEM exchange rates are determined using Poloniex by converting USDT -> BTC -> STEEM (or SBD)
-* Your store's steem wallet is scanned every 5 minutes for pending transactions (if there are any orders with pending payment)
+* STEEM/SBD exchange rates are determined by querying three exchanges and taking the average: Binance, Bittrex and Poloniex.
+* Binance rates are determined by converting USDT (Tether) -> BTC -> STEEM (SBD is not supported by Binance)
+* Bittrex rates are determined by converting USD -> BTC -> STEEM / SBD
+* Poloniex rates are determined by converting USDT (Tether) -> BTC -> STEEM /SBD
+* Your store's steem wallet is scanned every 2 minutes for pending transactions (if there are any orders with pending payment)
 * If an order is Pending Payment for too long it will be automatically canceled by WooCommerce default settings. You can change the timing or disable this feature in WooCommerce -> Settings -> Products -> Inventory -> Hold Stock (Minutes)
 
 ## Technical Requirements
-This plugin requires WordPress CRON jobs to be enabled. If CRON jobs are not enabled, currency exchange rates will not be updated and this plugin will not be able to search for STEEM payment records. If your exchange rates are not updating or if orders were paid for but still say "Payment Pending" or are automatically canceled, it is likely that CRON jobs are not enabled on your server or are not functioning properly. 
+WooCommerce plugin must be installed before you install this plugin.
+
+This plugin requires WordPress CRON jobs to be enabled. If CRON jobs are not enabled, currency exchange rates will not be updated and this plugin will not be able to search for STEEM payment records. If your exchange rates are not updating or if orders were paid for but still say "Payment Pending" or are automatically canceled, it is likely that CRON jobs are not enabled on your server or are not functioning properly.
 
 Order payments should normally be reflected in the order automatically within 5-10 minutes max. If the order is is still status Payment Pending or becomes cancelled more than 10-15 minutes, it is likely that your CRON jobs are not enabled.
+
+An alternative to using WordPress CRON jobs is setting up a real Crontab. A real Crontab is more efficient than using WordPress CRON jobs, and so you may prefer this approach. You can find instructions for setting up a real Crontab here: https://helloacm.com/setting-up-a-real-crontab-for-wordpress/
 
 ## Security Note
 You will <strong>NOT</strong> be required to enter any steem private keys into this plugin. You only have to provide your steem username so that the plugin knows where payments should be sent.

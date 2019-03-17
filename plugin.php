@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Steem Payment Method
  * Plugin URI: https://github.com/sagescrub/woocommerce-steem-payment-method
  * Description: Accept Steem payments directly to your shop (Currencies: STEEM, SBD).
- * Version: 1.0.19
+ * Version: 1.1.0
  * Author: <a href="https://steemit.com/@sagescrub">sagescrub</a>, <a href="https://steemit.com/@recrypto">ReCrypto</a>
  * Requires at least: 4.1
  * Tested up to: 5.1
@@ -17,7 +17,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define('WC_STEEM_VERSION', '1.0.19');
+define('WC_STEEM_VERSION', '1.1.0');
 define('WC_STEEM_DIR_PATH', trailingslashit(plugin_dir_path(__FILE__)));
 define('WC_STEEM_DIR_URL', trailingslashit(plugin_dir_url(__FILE__)));
 
@@ -42,9 +42,6 @@ function wc_steem_activate() {
 	}
 
 	update_option('woocommerce_wc_steem_settings', $settings);
-
-	// Make sure to have fresh currency rates
-	update_option('wc_steem_rates', array());
 }
 
 /**
@@ -55,8 +52,26 @@ function wc_steem_activate() {
 function wc_steem_deactivate() {
 	do_action('wc_steem_deactivated');
 
-	// Make sure to have fresh currency rates
-	update_option('wc_steem_rates', array());
+	// Remove the options from the database
+	delete_option('wc_steem_fiat_to_fiat_exchange_rates');
+	delete_option('wc_steem_fiat_to_fiat_exchange_rates_last_successful_query_time');
+	delete_option('wc_steem_fiat_to_steem_exchange_rates');
+
+	delete_option('wc_steem_exchange_poloniex_USD_SBD');
+	delete_option('wc_steem_exchange_poloniex_USD_STEEM');
+
+	delete_option('wc_steem_exchange_bittrex_USD_SBD');
+	delete_option('wc_steem_exchange_bittrex_USD_STEEM');
+
+	delete_option('wc_steem_exchange_binance_USD_SBD');
+	delete_option('wc_steem_exchange_binance_USD_STEEM');
+
+	delete_option('wc_steem_exchange_binance_last_successful_query_time');
+	delete_option('wc_steem_exchange_bittrex_last_successful_query_time');
+	delete_option('wc_steem_exchange_poloniex_last_successful_query_time');
+	
+	// Remove legacy rates option from pre 1.1.0 version of this plugin.
+	delete_option('wc_steem_rates');
 }
 
 /**
@@ -87,6 +102,11 @@ function wc_steem_init() {
 	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-checkout-handler.php');
 	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-order-handler.php');
 	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-product-handler.php');
+	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-rates-handler.php');	
+	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange.php');	
+	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange-poloniex.php');	
+	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange-bittrex.php');	
+	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange-binance.php');	
 
 	/**
 	 * Fires after including the files

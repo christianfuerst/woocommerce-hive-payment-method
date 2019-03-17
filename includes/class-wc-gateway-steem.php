@@ -286,22 +286,29 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 			update_post_meta($order_id, '_wc_steem_memo', $memo);
 			update_post_meta($order_id, '_wc_steem_from_amount', $from_amount);
 			update_post_meta($order_id, '_wc_steem_from_currency', $from_currency);
-			update_post_meta($order_id, '_wc_steem_exchange_rateo', $exchange_rate);
+			update_post_meta($order_id, '_wc_steem_exchange_rate', $exchange_rate);
 
 			update_post_meta($order->get_id(), '_wc_steem_status', 'pending');
+			
+			$exchange_rate_note = sprintf('1 %s = %s %s; 1 %s = %s %s',
+				$from_currency,
+				$exchange_rate,
+				$amount_currency,
+				$amount_currency,
+				round((float)1 / (float)$exchange_rate, 3, PHP_ROUND_HALF_UP),
+				$from_currency
+			);
 			
 			// Add order note indicating details of payment request
 			$order->add_order_note(
 				sprintf(
-					__('Steem payment <strong>Initiated</strong>:<br />Payee: %s<br />Amount Due: %s %s<br />Converted From: %s %s<br />Exchange Rate: 1 %s = %s %s<br />Memo: %s', 'wc-steem'), 
+					__('Steem payment <strong>Initiated</strong>:<br />Payee: %s<br />Amount Due: %s %s<br />Converted From: %s %s<br />Exchange Rate: %s<br />Memo: %s', 'wc-steem'), 
 					$payee, 
 					$amount,
 					$amount_currency,
 					$from_amount,
 					$from_currency,
-					$from_currency,
-					$exchange_rate,
-					$amount_currency,
+					$exchange_rate_note,
 					$memo
 				)				
 			);			
@@ -339,7 +346,7 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 				if (isset($amounts[WC_Steem::get_amount_currency() . '_' . $from_currency_symbol])) {
 					WC_Steem::set_amount($amounts[WC_Steem::get_amount_currency() . '_' . $from_currency_symbol]);
 					
-					// Get exchange rate based off 1 unit of the base fiat currency
+					// Set exchange rate based off 1 unit of the base fiat currency
 					WC_Steem::set_exchange_rate(wc_steem_rate_convert(1, $from_currency_symbol, WC_Steem::get_amount_currency()));
 				}
 			}

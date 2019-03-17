@@ -35,8 +35,6 @@ class WC_Steem_Cart_Handler {
 				}
 
 				if (WC_Steem::get_amount_currency() == $to_currency_symbol) {
-
-					
 					WC_Steem::set_amount($amount);
 				}
 

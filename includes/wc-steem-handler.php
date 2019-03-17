@@ -23,7 +23,9 @@ class WC_Steem_Handler {
 		$instance = __CLASS__;
 
 		if ( ! wp_next_scheduled('wc_steem_update_rates')) {
-			wp_schedule_event(time(), 'hourly', 'wc_steem_update_rates');
+			// Rate updater job will be called every 5 minutes. However the exchanges are only queried 
+			// at most once an hour per WC_Steem_Rates_Handler and WC_Steem_Exchange
+			wp_schedule_event(time(), '5min', 'wc_steem_update_rates');
 		}
 
 		if ( ! wp_next_scheduled('wc_steem_update_orders')) {
@@ -34,58 +36,22 @@ class WC_Steem_Handler {
 			wp_schedule_event(time(), '5min', 'wc_steem_send_pending_payment_emails');
 		}		
 
-		if (empty(get_option('wc_steem_rates'))) {
-			self::update_rates();
-		}
-
 		add_action('wc_steem_update_rates', array($instance, 'update_rates'));
 		add_action('wc_steem_update_orders', array($instance, 'update_orders'));
 		add_action('wc_steem_send_pending_payment_emails', array($instance, 'send_pending_payment_emails'));
+		
+		// Call update_rates() to initialize the rates data if they have not been recently queried
+		self::update_rates();		
 	}
 
+	/**
+	 * Update exchange rates data, if they have not been recently queried or if the cache is expired.
+	 *
+	 * @since 1.1.0
+	 */	
 	public static function update_rates() {
-		$rates = get_option('wc_steem_rates', array());
-
-		$response = wp_remote_get('https://poloniex.com/public?command=returnTicker');
-
-		if (is_array($response)) {
-			$tickers = json_decode(wp_remote_retrieve_body($response), true);
-
-			if (isset($tickers['USDT_BTC']['last'])) {
-				$rates['BTC_USD'] = $tickers['USDT_BTC']['last'];
-
-				if (isset($tickers['BTC_STEEM']['last'])) {
-					$rates['STEEM_USD'] = $tickers['BTC_STEEM']['last'] * $rates['BTC_USD'];
-				}
-
-				if (isset($tickers['BTC_SBD']['last'])) {
-					$rates['SBD_USD'] = $tickers['BTC_SBD']['last'] * $rates['BTC_USD'];
-				}
-			}
-		}
-
- 		//$response = wp_remote_get('http://api.fixer.io/latest?base=USD');
- 		$response = wp_remote_get('https://api.exchangeratesapi.io/latest?base=USD');
-
-		if (is_array($response)) {
-			$tickers = json_decode(wp_remote_retrieve_body($response), true);
-
-			if (isset($tickers['rates']) && $tickers['rates']) {
-				foreach ($tickers['rates'] as $to_currency_symbol => $to_currency_value) {
-					$rates["USD_{$to_currency_symbol}"] = $to_currency_value;
-
-					if (isset($rates['STEEM_USD'])) {
-						$rates["STEEM_{$to_currency_symbol}"] = $rates['STEEM_USD'] * $to_currency_value;
-					}
-
-					if (isset($rates['SBD_USD'])) {
-						$rates["SBD_{$to_currency_symbol}"] = $rates['SBD_USD'] * $to_currency_value;
-					}
-				}
-			}
-		}
-
-		update_option('wc_steem_rates', $rates);
+		$rates_handler = new WC_Steem_Rates_Handler();
+		$rates_handler->update_rates();
 	}
 
 	public static function update_orders() {
@@ -188,7 +154,7 @@ class WC_Steem_Handler {
 					$transfer['memo'], 
 					$payee,
 					$transfer['transaction']
-				)				
+				)	
 			);
 
 			update_post_meta($order->get_id(), '_wc_steem_status', 'paid');
