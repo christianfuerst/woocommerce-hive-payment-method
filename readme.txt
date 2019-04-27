@@ -3,7 +3,7 @@ Contributors: sagescrub, recrypto
 Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
-Tested up to: 5.1
+Tested up to: 5.1.1
 Stable tag: 1.1.0
 Requires PHP: 5.2.4
 License: GPLv3
@@ -97,6 +97,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.1.1 - 2019-4-26 =
+* Tweaked variable price range to display STEEM/SBD currency symbol only once instead of twice.
 
 = 1.1.0 - 2019-3-16 =
 * Added two new crypto exchanges to query for STEEM/SBD exchange rates. Now a total of three exchanges are queried: Binance, Bittrex and Poloniex. The rates are averaged.

@@ -148,7 +148,9 @@ class WC_Steem_Product_Handler {
 	public static function display_price($price, $currency_symbol) { ?>
 		<span class="wc-steem-price-amount <?php echo sanitize_title(sprintf('wc-steem-price-%s', $currency_symbol)); ?>">
 			<strong><?php echo $price; ?></strong>
+			<?php if ( $currency_symbol ) { ?>
 			<span class="wc-steem-price-amount-symbol"><?php echo $currency_symbol; ?></span>
+			<?php } ?>
 		</span>
 		<?php
 	}
@@ -163,7 +165,8 @@ class WC_Steem_Product_Handler {
 	 * @return void
 	 */
 	public static function display_price_range($min_price, $max_price, $currency_symbol) {
-		echo self::display_price($min_price, $currency_symbol);
+		// Do not display currency symbol for first price in range
+		echo self::display_price($min_price, null);
 			echo '&ndash;';
 		echo self::display_price($max_price, $currency_symbol);
 	}
