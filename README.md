@@ -13,6 +13,7 @@ Accept STEEM or SBD payments in your WooCommerce store via SteemConnect. Automat
 * If payment is not completed within several minutes of submitting an order an automatic payment reminder email will be sent to the customer with instructions for submitting payment. This is a fallback for 1) the customer doesn't complete the transaction, and 2) the payment detection functionality in this plugin stops working for any reason.
 * Currency exchange rate between FIAT and STEEM/SBD is automatically calculated at time of checkout.
 * Currency exchange rate between FIAT and STEEM/SBD can be optionally displayed below the product price on the product page.
+* Support for YITH WooCommerce Subscription plugin subscription renewals
 
 ## Currency Limitations
 - Currently supports different fiat currencies such as: AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, GBP, HKD, HRK, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, TRY, ZAR, EUR

@@ -39,6 +39,8 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 
 		// WordPress hooks
 		add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+
+		add_action('ywsbs_renew_subscription', array($this, 'yith_renew_subscription'), 20, 2);
 	}
 
 
@@ -251,13 +253,71 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 	public function process_payment($order_id) {
 		$response = null;
 
-		$order = new WC_Order($order_id);
-
 		// Reduce stock levels
 		wc_reduce_stock_levels($order_id);
 
-		// Remove cart
-		WC()->cart->empty_cart();
+		if (WC()->cart !== null) {
+			// Remove cart
+			WC()->cart->empty_cart();
+		}
+
+		// Set order meta for payee, memo, amount, amount_currency, etc.
+		$order = $this->prepare_order_for_payment($order_id);
+
+		// Retrieve meta info from order to pass to SteemConnect
+		$payee = get_post_meta($order_id, '_wc_steem_payee', true);
+		$memo = get_post_meta($order_id, '_wc_steem_memo', true);		
+		$amount = get_post_meta($order_id, '_wc_steem_amount', true);
+		$amount_currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
+		$from_amount = get_post_meta($order_id, '_wc_steem_from_amount', true);	
+		$from_currency = get_post_meta($order_id, '_wc_steem_from_currency', true);	
+		$exchange_rate = get_post_meta($order_id, '_wc_steem_exchange_rate', true);	
+
+		update_post_meta($order->get_id(), '_wc_steem_status', 'pending');
+			
+		$exchange_rate_note = sprintf('1 %s = %s %s; 1 %s = %s %s',
+			$from_currency,
+			$exchange_rate,
+			$amount_currency,
+			$amount_currency,
+			round((float)1 / (float)$exchange_rate, 3, PHP_ROUND_HALF_UP),
+			$from_currency
+		);
+		
+		// Add order note indicating details of payment request
+		$order->add_order_note(
+			sprintf(
+				__('Steem payment <strong>Initiated</strong>:<br />Payee: %s<br />Amount Due: %s %s<br />Converted From: %s %s<br />Exchange Rate: %s<br />Memo: %s', 'wc-steem'), 
+				$payee, 
+				$amount,
+				$amount_currency,
+				$from_amount,
+				$from_currency,
+				$exchange_rate_note,
+				$memo
+			)				
+		);		
+		
+		$steemConnectUrl = "https://v2.steemconnect.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $amount_currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
+		
+		$response = array(
+			'result' => 'success',
+			'redirect' => $steemConnectUrl
+		);
+
+		return $response;
+	}
+
+	/**
+	 * Process payment
+	 *
+	 * Validation takes place by querying transactions to Steemful API
+	 *
+	 * @since 1.1.3
+	 * @param int $order_id
+	 */
+	public function prepare_order_for_payment($order_id) {
+		$order = new WC_Order($order_id);
 		
 		$payee = get_post_meta($order_id, '_wc_steem_payee', true);
 		$amount = get_post_meta($order_id, '_wc_steem_amount', true);
@@ -288,43 +348,12 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 			update_post_meta($order_id, '_wc_steem_from_currency', $from_currency);
 			update_post_meta($order_id, '_wc_steem_exchange_rate', $exchange_rate);
 
-			update_post_meta($order->get_id(), '_wc_steem_status', 'pending');
-			
-			$exchange_rate_note = sprintf('1 %s = %s %s; 1 %s = %s %s',
-				$from_currency,
-				$exchange_rate,
-				$amount_currency,
-				$amount_currency,
-				round((float)1 / (float)$exchange_rate, 3, PHP_ROUND_HALF_UP),
-				$from_currency
-			);
-			
-			// Add order note indicating details of payment request
-			$order->add_order_note(
-				sprintf(
-					__('Steem payment <strong>Initiated</strong>:<br />Payee: %s<br />Amount Due: %s %s<br />Converted From: %s %s<br />Exchange Rate: %s<br />Memo: %s', 'wc-steem'), 
-					$payee, 
-					$amount,
-					$amount_currency,
-					$from_amount,
-					$from_currency,
-					$exchange_rate_note,
-					$memo
-				)				
-			);			
-
 			WC_Steem::reset();
 		}
 
-		$steemConnectUrl = "https://v2.steemconnect.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $amount_currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
-		
-		$response = array(
-			'result' => 'success',
-			'redirect' => $steemConnectUrl
-		);
-
-		return $response;
+		return $order;
 	}
+
 
 	/**
 	 * Validate frontend fields
@@ -370,5 +399,72 @@ class WC_Gateway_Steem extends WC_Payment_Gateway {
 	 */
 	public function can_refund_order($order) {
 		return $order->get_payment_method() == 'wc_steem' && false;
+	}
+
+	/**
+	 * Handle YITH Subscription Renewal
+	 *
+	 * @since 1.1.3
+	 * @param int $order_id
+	 * @return boolean
+	 */
+	public function yith_renew_subscription($order_id, $subscription_id) {
+		if (empty($subscription_id) || !class_exists('YWSBS_Subscription'))
+			return;
+
+		$subscription = new YWSBS_Subscription( $subscription_id );
+		$parent_order_id = $subscription->order_id;
+
+		// Get meta values from parent order
+		// Don't copy amount from parent order, it will be set below by new conversion
+		// Don't copy exchange_rate from parent order, it will be set below by new query
+		$payee = get_post_meta($parent_order_id, '_wc_steem_payee', true);
+		$amount_currency = get_post_meta($parent_order_id, '_wc_steem_amount_currency', true);
+		$memo = get_post_meta($parent_order_id, '_wc_steem_memo', true);		
+		$from_amount = get_post_meta($parent_order_id, '_wc_steem_from_amount', true);	
+		$from_currency = get_post_meta($parent_order_id, '_wc_steem_from_currency', true);	
+
+		update_post_meta($order_id, '_wc_steem_payee', $payee);
+		update_post_meta($order_id, '_wc_steem_amount_currency', $amount_currency);
+		update_post_meta($order_id, '_wc_steem_memo', $memo);
+		update_post_meta($order_id, '_wc_steem_from_amount', $from_amount);
+		update_post_meta($order_id, '_wc_steem_from_currency', $from_currency);
+
+		// Get fresh exchange rate and amount for this order
+		WC_Gateway_Steem::update_order_exchange_rate_and_amount($order_id);
+
+		$this->prepare_order_for_payment($order_id);
+	}
+
+	/**
+	 * Get fresh exchange rate and amount for the specified order. This is currently used for refreshing the rate
+	 * for subscription orders at the time of checkout in case they were stale or not initialized yet.
+	 *
+	 * @since 1.1.3
+	 * @param int $order_id
+	 * @return boolean
+	 */
+	public static function update_order_exchange_rate_and_amount($order_id) {
+		// Get meta values from parent order
+		// Don't copy amount from parent order, it will be set below by new conversion
+		// Don't copy exchange_rate from parent order, it will be set below by new query
+		$amount_currency = get_post_meta($order_id, '_wc_steem_amount_currency', true);
+		$from_amount = get_post_meta($order_id, '_wc_steem_from_amount', true);	
+		$from_currency = get_post_meta($order_id, '_wc_steem_from_currency', true);	
+
+		// Get from fiat symbol
+		$from_currency_symbol = wc_steem_get_base_fiat_currency();
+
+		$rates_handler = new WC_Steem_Rates_Handler();
+
+		// Get fresh exchange rate
+		$exchange_rate = $rates_handler->get_fiat_to_steem_exchange_rate($from_currency_symbol, $amount_currency);
+
+		// Convert the fiat amount from parent order to steem using latest exchange rate
+		$amount = wc_steem_rate_convert($from_amount, $from_currency_symbol, $amount_currency);
+
+		// Set meta values to this order
+		update_post_meta($order_id, '_wc_steem_amount', $amount);
+		update_post_meta($order_id, '_wc_steem_exchange_rate', $exchange_rate);		
 	}
 }

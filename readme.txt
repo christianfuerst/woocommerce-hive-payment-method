@@ -3,8 +3,8 @@ Contributors: sagescrub, recrypto
 Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
-Tested up to: 5.2.1
-Stable tag: 1.1.2
+Tested up to: 5.2.2
+Stable tag: 1.1.3
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -22,6 +22,7 @@ WooCommerce Steem Payment Method lets you accept Steem payments directly to your
 * If payment is not completed within several minutes of submitting an order an automatic payment reminder email will be sent to the customer with instructions for submitting payment. This is a fallback for 1) the customer doesn't complete the transaction, and 2) the payment detection functionality in this plugin stops working for any reason.
 * Currency exchange rate between FIAT and STEEM/SBD is automatically calculated at time of checkout.
 * Currency exchange rate between FIAT and STEEM/SBD can be optionally displayed below the product price on the product page.
+* Support for YITH WooCommerce Subscription plugin subscription renewals
 
 = Supported Steem Currencies =
 - Steem (STEEM)
@@ -86,6 +87,7 @@ Please support me by following me on Steem [@sagescrub](https://steemit.com/@sag
 If you are a developer and would like to contribute, please let me know!
 
 Steem: @sagescrub
+Discord: @sagescrub#8830
 
 == Screenshots ==
 
@@ -97,6 +99,9 @@ Steem: @sagescrub
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.1.3 - 2019-7-15 =
+* Added support for YITH WooCommerce Subscription plugin subscription renewals
 
 = 1.1.1 - 2019-4-26 =
 * Tweaked variable price range to display STEEM/SBD currency symbol only once instead of twice.
