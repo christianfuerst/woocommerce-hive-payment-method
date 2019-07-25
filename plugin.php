@@ -17,7 +17,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define('WC_STEEM_VERSION', '1.1.2');
+define('WC_STEEM_VERSION', '1.1.4');
 define('WC_STEEM_DIR_PATH', trailingslashit(plugin_dir_path(__FILE__)));
 define('WC_STEEM_DIR_URL', trailingslashit(plugin_dir_url(__FILE__)));
 

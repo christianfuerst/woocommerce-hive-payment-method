@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
 Tested up to: 5.2.2
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -99,6 +99,10 @@ Discord: @sagescrub#8830
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+
+= 1.1.4 - 2019-7-24 =
+* Fixed bug with Steem price displayed in cart for YITH WooCommerce Subscription renewals
 
 = 1.1.3 - 2019-7-15 =
 * Added support for YITH WooCommerce Subscription plugin subscription renewals

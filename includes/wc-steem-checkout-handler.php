@@ -31,7 +31,7 @@ class WC_Steem_Checkout_Handler {
 
 			if (isset($order) && !is_wp_error($order)) {
 				// Get fresh exchange rate and amount for this order
-				WC_Gateway_Steem::update_order_exchange_rate_and_amount($order_id);
+				WC_Gateway_Steem::update_order_exchange_rate_and_amount($order->get_id());
 
 				// Calculate totals and store them in WC_Steem
 				WC_Steem_Cart_Handler::calculate_totals_from_order($order);
