@@ -108,8 +108,8 @@ class WC_Steem_Handler {
 			'fields' => 'ids',
 		));	
 	
-		// Orders placed between 6 hours ago and 3 days ago
-		// Check for transaction no more than once every 6 hours
+		// Orders placed between 6 hours ago and 5 days ago
+		// Check for transaction no more than once every 2 hours
 		$query3 = new WP_Query(array(
 			'post_type' => 'shop_order',
 			'post_status' => 'wc-pending',
@@ -121,18 +121,18 @@ class WC_Steem_Handler {
 					'value' => 'wc_steem',
 					'compare' => '=',
 				),
-				// Transaction hasn't been queried for at least 6 hours
+				// Transaction hasn't been queried for at least 2 hours
 				array(
 					'key' => '_wc_steem_last_searched_for_transaction',
-					'value'   => date("Y/m/d h:i A", strtotime("-6 hours")),
+					'value'   => date("Y/m/d h:i A", strtotime("-2 hours")),
 					'compare' => '<=',
 				),
 			),
-			// Only include orders that were placed between 6 hours ago and 3 days ago
+			// Only include orders that were placed between 6 hours ago and 5 days ago
 			'date_query'    => array(
 				'column'  => 'post_date',
 				'before'    => '6 hours ago',
-				'after'   => '3 days ago',
+				'after'   => '5 days ago',
 				'inclusive' => true,
 			),
 			'fields' => 'ids',
