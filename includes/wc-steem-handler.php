@@ -56,7 +56,6 @@ class WC_Steem_Handler {
 
 	public static function update_orders() {
 
-		// Only search for transactions for orders that were placed 30 minutes ago.
 		// Orders within the last 30 minutes and no matching transaction has been found yet.
 		$query1 = new WP_Query(array(
 			'post_type' => 'shop_order',
@@ -69,10 +68,6 @@ class WC_Steem_Handler {
 					'value' => 'wc_steem',
 					'compare' => '=',
 				),
-				array(
-					'key' => '_wc_steem_transaction_transfer',
-					'compare' => 'NOT EXISTS',
-				),
 			),
 			// Only include orders that were placed within the last 30 minutes
 			'date_query'    => array(
@@ -83,9 +78,8 @@ class WC_Steem_Handler {
 			'fields' => 'ids',
 		));
 		
-		// Orders greater than 30 minutes ago and transactions have not been searched yet for this order.
-		// e.g. cron was disabled or search failed previously.
-		// These older orders will only be queried once and them marked that they have been queried.
+		// Orders placed between 30 minutes ago and 6 hours ago
+		// Check for transaction no more than once every 30 minutes
 		$query2 = new WP_Query(array(
 			'post_type' => 'shop_order',
 			'post_status' => 'wc-pending',
@@ -96,23 +90,55 @@ class WC_Steem_Handler {
 					'key' => '_payment_method',
 					'value' => 'wc_steem',
 					'compare' => '=',
-				),
-				// Transaction has not been queried yet. 
+				),		
+				// Transaction hasn't been queried for at least 30 minutes
 				array(
 					'key' => '_wc_steem_last_searched_for_transaction',
-					'compare' => 'NOT EXISTS',
+					'value'   => date("Y/m/d h:i A", strtotime("-30 minutes")),
+					'compare' => '<=',
 				),
 			),
-			// Only include orders that were placed before the last 30 minutes
+			// Only include orders that were placed between 30 minutes ago and 6 hours ago
 			'date_query'    => array(
 				'column'  => 'post_date',
 				'before'   => '30 minutes ago',
-				'inclusive' => false,
+				'after'   => '6 hours ago',
+				'inclusive' => true,
+			),		
+			'fields' => 'ids',
+		));	
+	
+		// Orders placed between 6 hours ago and 3 days ago
+		// Check for transaction no more than once every 6 hours
+		$query3 = new WP_Query(array(
+			'post_type' => 'shop_order',
+			'post_status' => 'wc-pending',
+			'posts_per_page' => 100,
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key' => '_payment_method',
+					'value' => 'wc_steem',
+					'compare' => '=',
+				),
+				// Transaction hasn't been queried for at least 6 hours
+				array(
+					'key' => '_wc_steem_last_searched_for_transaction',
+					'value'   => date("Y/m/d h:i A", strtotime("-6 hours")),
+					'compare' => '<=',
+				),
+			),
+			// Only include orders that were placed between 6 hours ago and 3 days ago
+			'date_query'    => array(
+				'column'  => 'post_date',
+				'before'    => '6 hours ago',
+				'after'   => '3 days ago',
+				'inclusive' => true,
 			),
 			'fields' => 'ids',
-		));
+		));		
 		
-		$order_post_ids = array_merge( $query1->posts, $query2->posts );
+		$order_post_ids = array_merge( $query1->posts, $query2->posts, $query3->posts );
 
 		if (empty($order_post_ids) || is_wp_error($order_post_ids)) {
 			return;

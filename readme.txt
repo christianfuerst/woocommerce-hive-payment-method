@@ -4,7 +4,7 @@ Donate link: https://steemit.com/@sagescrub
 Tags: woocommerce, woo commerce, payment method, steem, sbd, crypto
 Requires at least: 4.1
 Tested up to: 5.2.2
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -100,6 +100,8 @@ Discord: @sagescrub#8830
 
 == Changelog ==
 
+= 1.1.5 - 2019-7-27 =
+* The rate of time for checking matching transaction history is changed to be frequent when the order is first placed, and then gradually less frequent.
 
 = 1.1.4 - 2019-7-24 =
 * Fixed bug with Steem price displayed in cart for YITH WooCommerce Subscription renewals
