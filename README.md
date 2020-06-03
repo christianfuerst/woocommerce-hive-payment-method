@@ -1,5 +1,5 @@
 # WooCommerce Hive Payment Method
-Accept HIVE or HBD payments in your WooCommerce store via HiveSigner. Automatically converts from fiat (USD, EUR, etc) to HIVE. No transaction fees.
+Accept HIVE or HBD payments in your WooCommerce store via HiveSigner. Automatically converts from fiat to HIVE.
 
 ## Supported Hive Currencies
 - Hive (HIVE)
@@ -64,17 +64,15 @@ Hive: @roomservice
 Discord: @roomservice#8215
 
 ## Screenshots
-![steem01.jpg](https://cdn.steemitimages.com/DQmbiehWamh8pBhsuCcgowhYZPTXLvjrR8V2huzwpvSrpRA/steem01.jpg)
+![image.png](https://files.peakd.com/file/peakd-hive/roomservice/8rGIS9iN-image.png)
 
-![steem02.jpg](https://cdn.steemitimages.com/DQmNmiHaLkFMBJ27G2RyFHsJH7hSaJTLcxYsLLWXykXV199/steem02.jpg)
+![image.png](https://files.peakd.com/file/peakd-hive/roomservice/9Im4Htqq-image.png)
 
-![steem03.jpg](https://cdn.steemitimages.com/DQmZwWzUJ92xj7Q9BrA7NH184xFbYA4XvbKKT7PvrP4PCxJ/steem03.jpg)
+![image.png](https://files.peakd.com/file/peakd-hive/roomservice/sxgs9Kye-image.png)
 
-![steem04.jpg](https://cdn.steemitimages.com/DQmf2Wh9hvQ2HFh12UfjtaUpKQgwV1rpqd2ynYbdJwbTg5o/steem04.jpg)
+![image.png](https://files.peakd.com/file/peakd-hive/roomservice/W6Ap7oJ5-image.png)
 
-![steem05.jpg](https://cdn.steemitimages.com/DQmd4c4QtHo8mtSJj9ksSmQLoqzRsDXK2U3zZbEjXAKGihi/steem05.jpg)
-
-![steem06.jpg](https://cdn.steemitimages.com/DQmZqDR1nCHFM2X4xcAtioEhyY4ZsqGggkJxjbGemigTxMC/steem06.jpg)
+![image.png](https://files.peakd.com/file/peakd-hive/roomservice/3UpP4le4-image.png)
 
 ## Thanks
 * Special thanks to [@ReCrypto](https://peakd.com/@recrypto) and [@sagescrub](https://peakd.com/@recrypto) for being the authors of the original "WooCommerce Hive Payment Method" plugin before it was forked and updated into this plugin "WooCommerce Hive Payment Method".
