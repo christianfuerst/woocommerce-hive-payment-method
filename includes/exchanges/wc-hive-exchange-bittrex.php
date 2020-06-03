@@ -1,8 +1,8 @@
 <?php
 /**
- * WC_Steem_Exchange_Bittrex
+ * WC_Hive_Exchange_Bittrex
  *
- * @package WooCommerce Steem Payment Method
+ * @package WooCommerce Hive Payment Method
  * @category Class
  * @author sagescrub
  */
@@ -10,7 +10,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class WC_Steem_Exchange_Bittrex extends WC_Steem_Exchange {
+class WC_Hive_Exchange_Bittrex extends WC_Hive_Exchange {
 	
 	public function get_exchange_id() {
 		return 'bittrex';
@@ -25,18 +25,18 @@ class WC_Steem_Exchange_Bittrex extends WC_Steem_Exchange {
 	 */			
 	public function query_rates() {
 		$usd_btc = (float)$this->query_rate('USD', 'BTC');
-		$btc_steem = (float)$this->query_rate('BTC', 'STEEM');
-		$btc_sbd = (float)$this->query_rate('BTC', 'SBD');
+		$btc_hive = (float)$this->query_rate('BTC', 'HIVE');
+		$btc_hbd = (float)$this->query_rate('BTC', 'HBD');
 		
 		// Rates that were expected were not found.
-		if ($usd_btc === null || $btc_steem === null || $btc_sbd === null)
+		if ($usd_btc === null || $btc_hive === null || $btc_hbd === null)
 			return false;
 		
-		$usd_steem = $usd_btc * $btc_steem;
-		$usd_sbd = $usd_btc * $btc_sbd;
+		$usd_hive = $usd_btc * $btc_hive;
+		$usd_hbd = $usd_btc * $btc_hbd;
 		
-		$this->set_rate_usd_steem($usd_steem);		
-		$this->set_rate_usd_sbd($usd_sbd);
+		$this->set_rate_usd_hive($usd_hive);		
+		$this->set_rate_usd_hbd($usd_hbd);
 		$this->set_last_successful_query_time(strtotime('now'));
 		
 		return true;		

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param array $schedules
  * @return array $schedules
  */
-function wc_steem_register_schedules($schedules) {
+function wc_hive_register_schedules($schedules) {
 	$schedules['5min'] = array(
 		'interval' => 5 * MINUTE_IN_SECONDS,
 		'display'  => __( 'Every 5 minutes' )
@@ -32,4 +32,4 @@ function wc_steem_register_schedules($schedules) {
 
 	return $schedules;
 }
-add_filter('cron_schedules', 'wc_steem_register_schedules');
+add_filter('cron_schedules', 'wc_hive_register_schedules');

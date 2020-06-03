@@ -1,6 +1,6 @@
 ﻿WooCommerce Steem Payment Method - Payment Method for WooCommerce
 
-Copyright 2018 by the contributors
+Copyright 2020 by the contributors
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,6 +39,14 @@ and
   WooCommerce Steem Payment Method is Copyright (c) 2018 sagescrub
 
   WooCommerce Steem Payment Method is released under the GPL
+
+and
+
+  WooCommerce Hive Payment Method - Payment Method for WooCommerce
+
+  WooCommerce Hive Payment Method is Copyright (c) 2020 roomservice
+
+  WooCommerce Hive Payment Method is released under the GPL
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

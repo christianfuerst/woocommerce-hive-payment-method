@@ -1,8 +1,8 @@
 <?php
 /**
- * WC_Steem_Exchange
+ * WC_Hive_Exchange
  *
- * @package WooCommerce Steem Payment Method
+ * @package WooCommerce Hive Payment Method
  * @category Class
  * @author sagescrub
  */
@@ -10,7 +10,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-abstract class WC_Steem_Exchange {
+abstract class WC_Hive_Exchange {
 
 	abstract public function get_exchange_id();
 
@@ -50,24 +50,24 @@ abstract class WC_Steem_Exchange {
 		return $this->get('last_successful_query_time');
 	}	
 	
-	public function get_rate_usd_steem() {
-		return $this->get('USD_STEEM');
+	public function get_rate_usd_hive() {
+		return $this->get('USD_HIVE');
 	}
 	
-	public function get_rate_usd_sbd() {
-		return $this->get('USD_SBD');
+	public function get_rate_usd_hbd() {
+		return $this->get('USD_HBD');
 	}
 	
 	protected function set_last_successful_query_time($time) {
 		$this->set('last_successful_query_time', $time);
 	}	
 	
-	protected function set_rate_usd_steem($rate) {
-		$this->set('USD_STEEM', $rate);
+	protected function set_rate_usd_hive($rate) {
+		$this->set('USD_HIVE', $rate);
 	}
 	
-	protected function set_rate_usd_sbd($rate) {
-		$this->set('USD_SBD', $rate);
+	protected function set_rate_usd_hbd($rate) {
+		$this->set('USD_HBD', $rate);
 	}	
 	
 	public function get($key, $default = null) {
@@ -76,7 +76,7 @@ abstract class WC_Steem_Exchange {
 		
 		$exchange_id = $this->get_exchange_id();
 		
-		return get_option("wc_steem_exchange_{$exchange_id}_{$key}", $default);		
+		return get_option("wc_hive_exchange_{$exchange_id}_{$key}", $default);		
 	}
 
 	public function set($key, $value) {
@@ -85,6 +85,6 @@ abstract class WC_Steem_Exchange {
 		
 		$exchange_id = $this->get_exchange_id();
 		
-		return update_option("wc_steem_exchange_{$exchange_id}_{$key}", $value);		
+		return update_option("wc_hive_exchange_{$exchange_id}_{$key}", $value);		
 	}	
 }	

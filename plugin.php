@@ -1,47 +1,47 @@
 <?php
 /**
- * Plugin Name: WooCommerce Steem Payment Method
- * Plugin URI: https://github.com/sagescrub/woocommerce-steem-payment-method
- * Description: Accept Steem payments directly to your shop (Currencies: STEEM, SBD).
- * Version: 1.1.6
- * Author: <a href="https://steemit.com/@sagescrub">sagescrub</a>, <a href="https://steemit.com/@recrypto">ReCrypto</a>
+ * Plugin Name: WooCommerce Hive Payment Method
+ * Plugin URI: https://github.com/roomservice/woocommerce-hive-payment-method
+ * Description: Accept Hive payments directly to your shop (Currencies: HIVE, HBD).
+ * Version: 1.2.0
+ * Author: <a href="https://peakd.com/@roomservice">roomservice</a>, <a href="https://peakd.com/@sagescrub">sagescrub</a>, <a href="https://peakd.com/@recrypto">ReCrypto</a>
  * Requires at least: 4.1
- * Tested up to: 5.2.2
+ * Tested up to: 5.4.1
  *
  * WC requires at least: 3.1
- * WC tested up to: 3.6.5
+ * WC tested up to: 4.2.0
  *
- * Text Domain: wc-steem-payment-method
+ * Text Domain: wc-hive-payment-method
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define('WC_STEEM_VERSION', '1.1.6');
-define('WC_STEEM_DIR_PATH', trailingslashit(plugin_dir_path(__FILE__)));
-define('WC_STEEM_DIR_URL', trailingslashit(plugin_dir_url(__FILE__)));
+define('WC_HIVE_VERSION', '1.2.0');
+define('WC_HIVE_DIR_PATH', trailingslashit(plugin_dir_path(__FILE__)));
+define('WC_HIVE_DIR_URL', trailingslashit(plugin_dir_url(__FILE__)));
 
-register_activation_hook(__FILE__, 'wc_steem_activate');
-register_deactivation_hook(__FILE__, 'wc_steem_deactivate');
+register_activation_hook(__FILE__, 'wc_hive_activate');
+register_deactivation_hook(__FILE__, 'wc_hive_deactivate');
 
 /** 
  * Plugin activation
  *
  * @since 1.0.0
  */
-function wc_steem_activate() {
-	do_action('wc_steem_activated');
+function wc_hive_activate() {
+	do_action('wc_hive_activated');
 
-	$settings = get_option('woocommerce_wc_steem_settings', array());
+	$settings = get_option('woocommerce_wc_hive_settings', array());
 
 	if ( ! isset($settings['accepted_currencies'])) {
 		$settings['accepted_currencies'] = array(
-			'STEEM',
-			'SBD',
+			'HIVE',
+			'HBD',
 		);
 	}
 
-	update_option('woocommerce_wc_steem_settings', $settings);
+	update_option('woocommerce_wc_hive_settings', $settings);
 }
 
 /**
@@ -49,29 +49,25 @@ function wc_steem_activate() {
  *
  * @since 1.0.0
  */
-function wc_steem_deactivate() {
-	do_action('wc_steem_deactivated');
+function wc_hive_deactivate() {
+	do_action('wc_hive_deactivated');
 
 	// Remove the options from the database
-	delete_option('wc_steem_fiat_to_fiat_exchange_rates');
-	delete_option('wc_steem_fiat_to_fiat_exchange_rates_last_successful_query_time');
-	delete_option('wc_steem_fiat_to_steem_exchange_rates');
+	delete_option('wc_hive_fiat_to_fiat_exchange_rates');
+	delete_option('wc_hive_fiat_to_fiat_exchange_rates_last_successful_query_time');
+	delete_option('wc_hive_fiat_to_hive_exchange_rates');
 
-	delete_option('wc_steem_exchange_poloniex_USD_SBD');
-	delete_option('wc_steem_exchange_poloniex_USD_STEEM');
+	delete_option('wc_hive_exchange_bittrex_USD_HBD');
+	delete_option('wc_hive_exchange_bittrex_USD_HIVE');
 
-	delete_option('wc_steem_exchange_bittrex_USD_SBD');
-	delete_option('wc_steem_exchange_bittrex_USD_STEEM');
+	delete_option('wc_hive_exchange_binance_USD_HBD');
+	delete_option('wc_hive_exchange_binance_USD_HIVE');
 
-	delete_option('wc_steem_exchange_binance_USD_SBD');
-	delete_option('wc_steem_exchange_binance_USD_STEEM');
-
-	delete_option('wc_steem_exchange_binance_last_successful_query_time');
-	delete_option('wc_steem_exchange_bittrex_last_successful_query_time');
-	delete_option('wc_steem_exchange_poloniex_last_successful_query_time');
+	delete_option('wc_hive_exchange_binance_last_successful_query_time');
+	delete_option('wc_hive_exchange_bittrex_last_successful_query_time');
 	
 	// Remove legacy rates option from pre 1.1.0 version of this plugin.
-	delete_option('wc_steem_rates');
+	delete_option('wc_hive_rates');
 }
 
 /**
@@ -79,57 +75,56 @@ function wc_steem_deactivate() {
  * 
  * @since 1.0.0
  */
-function wc_steem_init() {
+function wc_hive_init() {
 
 	/**
 	 * Fires before including the files
 	 *
 	 * @since 1.0.0
 	 */
-	do_action('wc_steem_pre_init');
+	do_action('wc_hive_pre_init');
 
-	require_once(WC_STEEM_DIR_PATH . 'libraries/wordpress.php');
-	require_once(WC_STEEM_DIR_PATH . 'libraries/woocommerce.php');
+	require_once(WC_HIVE_DIR_PATH . 'libraries/wordpress.php');
+	require_once(WC_HIVE_DIR_PATH . 'libraries/woocommerce.php');
 
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-functions.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/class-wc-steem.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/class-wc-steem-transaction-transfer.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-functions.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/class-wc-hive.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/class-wc-hive-transaction-transfer.php');
 
-	require_once(WC_STEEM_DIR_PATH . 'includes/class-wc-gateway-steem.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/class-wc-gateway-hive.php');
 
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-handler.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-cart-handler.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-checkout-handler.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-order-handler.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-product-handler.php');
-	require_once(WC_STEEM_DIR_PATH . 'includes/wc-steem-rates-handler.php');	
-	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange.php');	
-	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange-poloniex.php');	
-	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange-bittrex.php');	
-	require_once(WC_STEEM_DIR_PATH . 'includes/exchanges/wc-steem-exchange-binance.php');	
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-handler.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-cart-handler.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-checkout-handler.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-order-handler.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-product-handler.php');
+	require_once(WC_HIVE_DIR_PATH . 'includes/wc-hive-rates-handler.php');	
+	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange.php');	
+	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange-bittrex.php');	
+	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange-binance.php');	
 
 	/**
 	 * Fires after including the files
 	 *
 	 * @since 1.0.0
 	 */
-	do_action('wc_steem_init');
+	do_action('wc_hive_init');
 }
-add_action('plugins_loaded', 'wc_steem_init');
+add_action('plugins_loaded', 'wc_hive_init');
 
 
 
 /**
- * Register "WooCommerce Steem" as payment gateway in WooCommerce
+ * Register "WooCommerce Hive" as payment gateway in WooCommerce
  *
  * @since 1.0.0
  *
  * @param array $gateways
  * @return array $gateways
  */
-function wc_steem_register_gateway($gateways) {
-	$gateways[] = 'WC_Gateway_Steem';
+function wc_hive_register_gateway($gateways) {
+	$gateways[] = 'WC_Gateway_Hive';
 
 	return $gateways;
 }
-add_filter('woocommerce_payment_gateways', 'wc_steem_register_gateway');
+add_filter('woocommerce_payment_gateways', 'wc_hive_register_gateway');
