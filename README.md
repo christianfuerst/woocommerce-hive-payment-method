@@ -75,7 +75,7 @@ Discord: @roomservice#8215
 ![image.png](https://files.peakd.com/file/peakd-hive/roomservice/3UpP4le4-image.png)
 
 ## Thanks
-* Special thanks to [@ReCrypto](https://peakd.com/@recrypto) and [@sagescrub](https://peakd.com/@recrypto) for being the authors of the original "WooCommerce Hive Payment Method" plugin before it was forked and updated into this plugin "WooCommerce Hive Payment Method".
+* Special thanks to [@ReCrypto](https://peakd.com/@recrypto) and [@sagescrub](https://peakd.com/@recrypto) for being the authors of the original "WooCommerce Steem Payment Method" plugin before it was forked and updated into this plugin "WooCommerce Hive Payment Method".
 
 ## Disclaimer
 Authors claim no responsibility for missed transactions, loss of your funds, loss of customer funds, incorrect or delayed exchange rates or any other issue you may encounter as a result of using this plugin. Use this plugin at your own risk.

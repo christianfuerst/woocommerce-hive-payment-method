@@ -54,7 +54,7 @@ An alternative to using WordPress CRON jobs is setting up a real Crontab. A real
 You will <strong>NOT</strong> be required to enter any steem private keys into this plugin. You only have to provide your steem username so that the plugin knows where payments should be sent.
 
 = Thanks =
-* Special thanks to [@ReCrypto](https://peakd.com/@recrypto) and [@sagescrub](https://peakd.com/@recrypto) for being the authors of the original "WooCommerce Hive Payment Method" plugin before it was forked and updated into this plugin "WooCommerce Hive Payment Method".
+* Special thanks to [@ReCrypto](https://peakd.com/@recrypto) and [@sagescrub](https://peakd.com/@recrypto) for being the authors of the original "WooCommerce Steem Payment Method" plugin before it was forked and updated into this plugin "WooCommerce Hive Payment Method".
 
 = Disclaimer =
 Authors claim no responsibility for missed transactions, loss of your funds, loss of customer funds, incorrect or delayed exchange rates or any other issue you may encounter as a result of using this plugin. Use this plugin at your own risk.
