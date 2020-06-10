@@ -25,7 +25,8 @@ class WC_Hive_Rates_Handler {
 		// Queue up exchanges that will be queried for rates
 		array_push($exchanges,
 			new WC_Hive_Exchange_Bittrex(),
-			new WC_Hive_Exchange_Binance()
+			new WC_Hive_Exchange_Binance(),
+			new WC_Hive_Exchange_HiveEngine()
 		);
 		
 		// Will indicate whether any of the exchanges were queried in this round.
@@ -66,7 +67,9 @@ class WC_Hive_Rates_Handler {
 			if ($rate_usd_hbd != null && $rate_usd_hbd > 0) {
 				$hbd_usd_average += $rate_usd_hbd;
 				$hbd_count++;
-			}	
+			}
+
+			$rates_hiveengine = $exchange->get_rates_hiveengine();
 		}
 		
 		// If no HIVE or HBD rates were discovered
@@ -93,6 +96,10 @@ class WC_Hive_Rates_Handler {
 			$fiat_to_hive_exchange_rates["{$to_fiat_currency_symbol}_HIVE"] = $hive_usd_average * $to_fiat_currency_value;
 
 			$fiat_to_hive_exchange_rates["{$to_fiat_currency_symbol}_HBD"] = $hbd_usd_average * $to_fiat_currency_value;
+		
+			foreach($rates_hiveengine as $hiveengine_symbol => $hiveengine_last_price) {
+				$fiat_to_hive_exchange_rates["{$to_fiat_currency_symbol}_{$hiveengine_symbol}"] = $hiveengine_last_price * $hive_usd_average * $to_fiat_currency_value;
+			}
 		}			
 		
 		// Cache rates

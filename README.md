@@ -1,9 +1,10 @@
 # WooCommerce Hive Payment Method
-Accept HIVE or HBD payments in your WooCommerce store via HiveSigner. Automatically converts from fiat to HIVE.
+Accept HIVE, HBD and HIVE-ENGINE payments in your WooCommerce store via HiveSigner. Automatically converts from fiat to HIVE.
 
 ## Supported Hive Currencies
 - Hive (HIVE)
 - Hive Backed Dollars (HBD)
+- Hive-Engine Tokens
 
 ## Details
 * There is no extra transaction fee. Payments are made directly between customer and store owner via HiveSigner. 
@@ -23,6 +24,7 @@ Accept HIVE or HBD payments in your WooCommerce store via HiveSigner. Automatica
 * HIVE/HBD exchange rates are determined by querying three exchanges and taking the average: Binance and Bittrex.
 * Binance rates are determined by converting USDT (Tether) -> BTC -> HIVE (HBD is not supported by Binance)
 * Bittrex rates are determined by converting USD -> BTC -> HIVE / HBD
+* HIVE-ENGINE token rates are determinded by converting USD -> BTC -> HIVE -> HIVE-ENGINE token
 * Your store's wallet is scanned every 2 minutes for pending transactions (if there are any orders with pending payment)
 * If an order is Pending Payment for too long it will be automatically canceled by WooCommerce default settings. You can change the timing or disable this feature in WooCommerce -> Settings -> Products -> Inventory -> Hold Stock (Minutes)
 

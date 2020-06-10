@@ -2,8 +2,8 @@
 /**
  * Plugin Name: WooCommerce Hive Payment Method
  * Plugin URI: https://github.com/roomservice/woocommerce-hive-payment-method
- * Description: Accept Hive payments directly to your shop (Currencies: HIVE, HBD).
- * Version: 1.2.0
+ * Description: Accept Hive payments directly to your shop (Currencies: HIVE, HBD, HIVE-ENGINE).
+ * Version: 1.3.0
  * Author: <a href="https://peakd.com/@roomservice">roomservice</a>, <a href="https://peakd.com/@sagescrub">sagescrub</a>, <a href="https://peakd.com/@recrypto">ReCrypto</a>
  * Requires at least: 4.1
  * Tested up to: 5.4.1
@@ -63,6 +63,10 @@ function wc_hive_deactivate() {
 	delete_option('wc_hive_exchange_binance_USD_HBD');
 	delete_option('wc_hive_exchange_binance_USD_HIVE');
 
+	delete_option('wc_hive_exchange_hiveengine_RATES');
+	delete_option('wc_hive_exchange_hiveengine_CURRENCIES');
+	delete_option('wc_hive_exchange_hiveengine_PRECISIONS');
+
 	delete_option('wc_hive_exchange_binance_last_successful_query_time');
 	delete_option('wc_hive_exchange_bittrex_last_successful_query_time');
 	
@@ -102,6 +106,7 @@ function wc_hive_init() {
 	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange.php');	
 	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange-bittrex.php');	
 	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange-binance.php');	
+	require_once(WC_HIVE_DIR_PATH . 'includes/exchanges/wc-hive-exchange-hiveengine.php');	
 
 	/**
 	 * Fires after including the files

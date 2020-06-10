@@ -50,6 +50,9 @@ class WC_Hive_Handler {
 	 * @since 1.1.0
 	 */	
 	public static function update_rates() {
+		$exchange_hiveengine = new WC_Hive_Exchange_HiveEngine();
+		$exchange_hiveengine->update_rates_force();
+
 		$rates_handler = new WC_Hive_Rates_Handler();
 		$rates_handler->update_rates();
 	}

@@ -44,23 +44,27 @@ class WC_Hive_Cart_Handler {
 
 		if ($currencies = wc_hive_get_currencies()) {
 			foreach ($currencies as $to_currency_symbol => $currency) {
-				$amount = wc_hive_rate_convert($total, $from_currency_symbol, $to_currency_symbol);
+				if (wc_hive_is_accepted_currency($to_currency_symbol)) {
+					$amount = wc_hive_rate_convert($total, $from_currency_symbol, $to_currency_symbol);
 				
-				if ($amount <= 0) {
-					continue;
+					if ($amount <= 0) {
+						continue;
+					}
+	
+					if (WC_Hive::get_amount_currency() == $to_currency_symbol) {
+						WC_Hive::set_amount($amount);
+					}
+	
+					$amounts["{$to_currency_symbol}_{$from_currency_symbol}"] = $amount;
 				}
-
-				if (WC_Hive::get_amount_currency() == $to_currency_symbol) {
-					WC_Hive::set_amount($amount);
-				}
-
-				$amounts["{$to_currency_symbol}_{$from_currency_symbol}"] = $amount;
 			}
 
 			foreach ($currencies as $to_currency_symbol => $currency) {
-				if ( ! isset($amounts["{$to_currency_symbol}_{$from_currency_symbol}"])) {
-					$amounts["{$to_currency_symbol}_{$from_currency_symbol}"] = $total;
-					WC_Hive::set_amount($total);
+				if (wc_hive_is_accepted_currency($to_currency_symbol)) {
+					if ( ! isset($amounts["{$to_currency_symbol}_{$from_currency_symbol}"])) {
+						$amounts["{$to_currency_symbol}_{$from_currency_symbol}"] = $total;
+						WC_Hive::set_amount($total);
+					}
 				}
 			}
 			

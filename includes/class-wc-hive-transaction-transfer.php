@@ -46,39 +46,77 @@ class WC_Hive_Transaction_Transfer {
 			
 			return $transfer;
 		}
-		
-		$file_contents = file_get_contents("https://xapi.esteem.app/get_account_history?from=-1&limit=1000&account=" . $data['to']);
-		
-		// If failure in retrieving url
-		if ($file_contents === false)
-			return $transfer;
-		
-		$tx = json_decode($file_contents, true);
-		
-		// If error decoding JSON
-		if (JSON_ERROR_NONE !== json_last_error()) {
-			return $transfer;
-		}
+
+		if ($data['amount_currency'] != 'HIVE' && $data['amount_currency'] != 'HBD') {
+			$file_contents = file_get_contents("https://accounts.hive-engine.com/accountHistory?account=" . $data['to']);
+
+			// If failure in retrieving url
+			if ($file_contents === false)
+				return $transfer;
 				
-		foreach ($tx as $r) {
-			// Format the amount as a string to ensure 3 decimal places, no thousand seperator in order to find a match.
-			$amount = number_format( $data['amount'] , 3, "." , "" ) . " " . $data['amount_currency'];
+			$tx = json_decode($file_contents, true);
+					
+			// If error decoding JSON
+			if (JSON_ERROR_NONE !== json_last_error()) {
+				return $transfer;
+			}
 
-			if ($r[1]['op'][0] === 'transfer') {
-				$transaction = $r[1]['op'][1];
-				$transaction['time'] = $r[1]['timestamp'];
-				$transaction['transaction'] = $r[1]['trx_id'];
-
-				if ($data['to'] === $transaction['to'] && $data['memo'] === $transaction['memo'] && $amount === $transaction['amount']) {
-
-					$transfer = $transaction;
-					break;
+			foreach ($tx as $r) {
+				// Format the amount as a string to ensure 3 decimal places, no thousand seperator in order to find a match.
+				$amount = number_format( $data['amount'] , 3, "." , "" ) . " " . $data['amount_currency'];
+	
+				if ($r['operation'] === 'tokens_transfer') {
+					$transaction = array(
+						'from' => $r['from'],
+						'to' => $r['to'],
+						"amount" => number_format( $r['quantity'] , 3, "." , "" ) . " " . $r['symbol'],
+						"memo" => $r['memo'],
+						'time' => date(DATE_ISO8601, $r['timestamp']),
+						'transaction' => $r['transactionId']
+					);
+	
+					if ($data['to'] === $transaction['to'] && $data['memo'] === $transaction['memo'] && $amount === $transaction['amount']) {
+						$transfer = $transaction;
+						break;
+					}
 				}
 			}
-		}
+			
+			// Successfully (no errors in retrieving JSON) searched transaction history for the record.
+			update_post_meta($order->get_id(), '_wc_hive_last_searched_for_transaction', date('m/d/Y h:i:s a', time()));
+		} else {
+			$file_contents = file_get_contents("https://xapi.esteem.app/get_account_history?from=-1&limit=1000&account=" . $data['to']);
 		
-		// Successfully (no errors in retrieving JSON) searched transaction history for the record.
-		update_post_meta($order->get_id(), '_wc_hive_last_searched_for_transaction', date('m/d/Y h:i:s a', time()));
+			// If failure in retrieving url
+			if ($file_contents === false)
+				return $transfer;
+			
+			$tx = json_decode($file_contents, true);
+			
+			// If error decoding JSON
+			if (JSON_ERROR_NONE !== json_last_error()) {
+				return $transfer;
+			}
+					
+			foreach ($tx as $r) {
+				// Format the amount as a string to ensure 3 decimal places, no thousand seperator in order to find a match.
+				$amount = number_format( $data['amount'] , 3, "." , "" ) . " " . $data['amount_currency'];
+	
+				if ($r[1]['op'][0] === 'transfer') {
+					$transaction = $r[1]['op'][1];
+					$transaction['time'] = $r[1]['timestamp'];
+					$transaction['transaction'] = $r[1]['trx_id'];
+	
+					if ($data['to'] === $transaction['to'] && $data['memo'] === $transaction['memo'] && $amount === $transaction['amount']) {
+						$transfer = $transaction;
+						break;
+					}
+				}
+			}
+			
+			// Successfully (no errors in retrieving JSON) searched transaction history for the record.
+			update_post_meta($order->get_id(), '_wc_hive_last_searched_for_transaction', date('m/d/Y h:i:s a', time()));
+		}
 		
 		return $transfer;
 	}

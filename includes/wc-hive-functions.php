@@ -17,10 +17,19 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return array
  */
 function wc_hive_get_currencies() {
-	return apply_filters('wc_hive_currencies', array(
+	$exchange = new WC_Hive_Exchange_HiveEngine();
+	$hiveengine_currencies = $exchange->get_currencies_hiveengine();
+
+	$currencies = array(
 		'HIVE' => 'Hive',
-		'HBD' => 'Hive Backed Dollar',
-	));
+		'HBD' => 'Hive Backed Dollar'
+	);
+
+	foreach ($hiveengine_currencies as $index => $element ) {
+		$currencies[$index] = $element;
+	}
+
+	return apply_filters('wc_hive_currencies', $currencies);
 }
 
 /**
@@ -143,6 +152,7 @@ function wc_hive_rate_convert($amount, $from_fiat_currency_symbol, $to_hive_hbd_
 		return $amount;
 	
 	$rates_handler = new WC_Hive_Rates_Handler();
+	$exchange = new WC_Hive_Exchange_HiveEngine();
 
 	$rate = $rates_handler->get_fiat_to_hive_exchange_rate($from_fiat_currency_symbol, $to_hive_hbd_currency_symbol);
 
@@ -153,15 +163,20 @@ function wc_hive_rate_convert($amount, $from_fiat_currency_symbol, $to_hive_hbd_
 		$to_hive_hbd_currency_symbol
 	);
 	
+	$precision = 3;
+	if ($to_hive_hbd_currency_symbol != 'HIVE' && $to_hive_hbd_currency_symbol != 'HBD') {
+		$precisions = $exchange->get_precisions_hiveengine();
+		$precision = $precisions[$to_hive_hbd_currency_symbol];
+	}
+
 	return apply_filters(
 		'wc_hive_rate_convert', 
-		($rate > 0 ? round($amount / $rate, 3, PHP_ROUND_HALF_UP) : 0), 
+		($rate > 0 ? round($amount / $rate, $precision, PHP_ROUND_HALF_UP) : 0), 
 		$amount, 
 		$from_fiat_currency_symbol, 
 		$to_hive_hbd_currency_symbol
 	);
 }
-
 
 # Order functions
 

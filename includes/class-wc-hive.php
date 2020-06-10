@@ -142,7 +142,19 @@ class WC_Hive {
 			self::set($key, '');
 		}
 
-		self::set('amount_currency', 'HIVE');
+		if ($currencies = wc_hive_get_currencies()) {
+			$first_currency = '';
+
+			foreach ($currencies as $currency_symbol => $currency) {
+				if (wc_hive_is_accepted_currency($currency_symbol) && empty($first_currency)) {
+					$first_currency = $currency_symbol;
+				}
+			}
+
+			self::set('amount_currency', $first_currency);
+		} else {
+			self::set('amount_currency', 'HIVE');
+		}
 	}
 }
 

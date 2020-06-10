@@ -195,6 +195,7 @@ class WC_Gateway_Hive extends WC_Payment_Gateway {
 
 			<div class="clear"></div>
 		</fieldset><?php
+
 	}
 
 
@@ -299,6 +300,12 @@ class WC_Gateway_Hive extends WC_Payment_Gateway {
 		);		
 		
 		$hiveConnectUrl = "https://hivesigner.com/sign/transfer?to=" . $payee . "&memo=" . $memo . "&amount=" . $amount . "%20" . $amount_currency ."&redirect_uri=" . urlencode($this->get_return_url($order));
+
+		if ($amount_currency != 'HIVE' && $amount_currency != 'HBD') {
+			$hiveConnectUrl = "https://hivesigner.com/sign/custom-json?required_posting_auths=%5B%5D&required_auths=%5B%22__signer%22%5D&authority=active&id=ssc-mainnet-hive" .
+							  "&json=%7B%22contractName%22%3A%22tokens%22,%22contractAction%22%3A%22transfer%22,%22contractPayload%22%3A%7B%22symbol%22%3A%22" . $amount_currency .
+							  "%22,%22to%22%3A%22" . $payee . "%22,%22quantity%22%3A%22" . $amount . "%22,%22memo%22%3A%22" . $memo . "%22%7D%7D" . "&redirect_uri=" . urlencode($this->get_return_url($order));							  
+		}
 		
 		$response = array(
 			'result' => 'success',

@@ -9,7 +9,7 @@ Requires PHP: 5.2.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Accept HIVE or HBD payments in your WooCommerce store via HiveSigner. Automatically converts from fiat (USD, EUR, etc) to HIVE. No transaction fees.
+Accept HIVE, HBD and HIVE-ENGINE payments in your WooCommerce store via HiveSigner. Automatically converts from fiat (USD, EUR, etc) to HIVE. No transaction fees.
 
 == Description ==
 
@@ -27,10 +27,11 @@ WooCommerce Hive Payment Method lets you accept Hive payments directly to your W
 = Supported Steem Currencies =
 - Hive (HIVE)
 - Hive Backed Dollars (HBD)
+- Hive-Engine Tokens
 
 = FIAT Currencies Supported =
 - Currently supports fiat currencies such as: AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, GBP, HKD, HRK, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, TRY, ZAR, EUR
-- If none of the fiat currency listed above, it will default 1:1 conversion rate between your store's currency and STEEM or SBD.
+- If none of the fiat currency listed above, it will default 1:1 conversion rate between your store's currency and HIVE or HBD.
 
 = How it Works Behind The Scenes =
 * Exchange rates are updated once an hour
@@ -38,6 +39,7 @@ WooCommerce Hive Payment Method lets you accept Hive payments directly to your W
 * HIVE/HBD exchange rates are determined by querying three exchanges and taking the average: Binance, and Bittrex.
 * Binance rates are determined by converting USDT (Tether) -> BTC -> HIVE (HBD is not supported by Binance)
 * Bittrex rates are determined by converting USD -> BTC -> HIVE / HBD
+* HIVE-ENGINE token rates are determinded by converting USD -> BTC -> HIVE -> HIVE-ENGINE token
 * Your store's wallet is scanned every 5 minutes for pending transactions (if there are any orders with pending payment)
 * If an order is Pending Payment for too long it will be automatically canceled by WooCommerce default settings. You can change the timing or disable this feature in WooCommerce -> Settings -> Products -> Inventory -> Hold Stock (Minutes)
 
@@ -94,6 +96,9 @@ Discord: @roomservice#8215
 6. Settings for this plugin within WooCommerce Payments Settings
 
 == Changelog ==
+
+= 1.3.0 - 2020-6-10 =
+* Added HIVE-ENGINE token support
 
 = 1.2.0 - 2020-6-3 =
 * Forked and migrated to Hive Blockchain

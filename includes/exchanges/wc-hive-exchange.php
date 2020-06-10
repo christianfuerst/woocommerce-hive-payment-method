@@ -24,7 +24,20 @@ abstract class WC_Hive_Exchange {
 	abstract protected function query_rates();
 	
 	/**
-	 * Update the exchange rates. Do not update if it has been queried already within the last hour.
+	 * Force update the exchange rates.
+	 * Returns bool indicating whether the rates have been updated.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */	
+	public function update_rates_force() {	
+		$success = $this->query_rates();
+		
+		return $success;
+	}
+
+	/**
+	 * Update the exchange rates. Do not update if it has been queried already within the last ten minutes.
 	 * Returns bool indicating whether the rates have been updated.
 	 *
 	 * @since 1.1.0
@@ -32,10 +45,10 @@ abstract class WC_Hive_Exchange {
 	 */	
 	public function update_rates() {
 		$last_successful_query_time = $this->get_last_successful_query_time();
-		$one_hour_ago = strtotime("-1 hours");
+		$ten_minutes_ago = strtotime("-10 minutes");
 		
-		// If already queried less than an hour ago, do not query again, so that API is not over queried.
-		if ($last_successful_query_time !== null && $last_successful_query_time > $one_hour_ago)
+		// If already queried less than ten minutes ago, do not query again, so that API is not over queried.
+		if ($last_successful_query_time !== null && $last_successful_query_time > $ten_minutes_ago)
 			return false;
 		
 		$success = $this->query_rates();
@@ -57,6 +70,18 @@ abstract class WC_Hive_Exchange {
 	public function get_rate_usd_hbd() {
 		return $this->get('USD_HBD');
 	}
+
+	public function get_currencies_hiveengine() {
+		return $this->get('CURRENCIES');
+	}
+
+	public function get_rates_hiveengine() {
+		return $this->get('RATES');
+	}
+
+	public function get_precisions_hiveengine() {
+		return $this->get('PRECISIONS');
+	}
 	
 	protected function set_last_successful_query_time($time) {
 		$this->set('last_successful_query_time', $time);
@@ -68,6 +93,18 @@ abstract class WC_Hive_Exchange {
 	
 	protected function set_rate_usd_hbd($rate) {
 		$this->set('USD_HBD', $rate);
+	}	
+
+	protected function set_currencies_hiveengine($currencies) {
+		$this->set('CURRENCIES', $currencies);
+	}
+
+	protected function set_rates_hiveengine($rates) {
+		$this->set('RATES', $rates);
+	}
+
+	protected function set_precisions_hiveengine($precisions) {
+		$this->set('PRECISIONS', $precisions);
 	}	
 	
 	public function get($key, $default = null) {
